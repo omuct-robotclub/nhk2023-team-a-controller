@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://d0ej8q12otx8p"]
+
+[ext_resource type="Script" path="res://scripts/parameter_button.gd" id="1_tlv7v"]
+
+[node name="Antiwindup" type="CheckButton"]
+script = ExtResource("1_tlv7v")

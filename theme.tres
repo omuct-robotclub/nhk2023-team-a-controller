@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://baqy2s2jpay2"]
+
+[ext_resource type="FontFile" uid="uid://dn1cdfwid8ttf" path="res://fonts/NotoSansMono_ExtraCondensed-Medium.ttf" id="1_dcrwc"]
+
+[resource]
+default_font = ExtResource("1_dcrwc")
+default_font_size = 30

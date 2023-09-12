@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3nuevgxuea1c"]
+
+[ext_resource type="Script" path="res://scripts/parameter_slider.gd" id="1_5j6gm"]
+
+[node name="ParameterSlider" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+script = ExtResource("1_5j6gm")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="HSlider" type="HSlider" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+step = 1.45519e-11
+allow_greater = true
+allow_lesser = true

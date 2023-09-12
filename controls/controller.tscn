@@ -1,0 +1,250 @@
+[gd_scene load_steps=16 format=3 uid="uid://cgn8t07t2if4f"]
+
+[ext_resource type="Theme" uid="uid://baqy2s2jpay2" path="res://theme.tres" id="1_vm7p2"]
+[ext_resource type="Script" path="res://scripts/avoid_notch.gd" id="2_3tkds"]
+[ext_resource type="Script" path="res://scripts/robot_controller.gd" id="3_oi048"]
+[ext_resource type="PackedScene" uid="uid://muuiqpin0e6h" path="res://controls/rosout_viewer.tscn" id="4_vqv0p"]
+[ext_resource type="PackedScene" uid="uid://d3u0tvvu78rlr" path="res://controls/connection_indicator.tscn" id="5_2ccwf"]
+[ext_resource type="PackedScene" uid="uid://cc4ksg2t1kxax" path="res://controls/pid_gain_controller.tscn" id="6_waxgt"]
+[ext_resource type="Script" path="res://scripts/arm_angle_controller.gd" id="7_8lga2"]
+[ext_resource type="PackedScene" uid="uid://do7v7wvbjylin" path="res://controls/slider_with_preset_buttons.tscn" id="8_36cg0"]
+[ext_resource type="Script" path="res://scripts/arm_length_controller.gd" id="9_02u3r"]
+[ext_resource type="Script" path="res://scripts/expander_controller.gd" id="10_yswmu"]
+[ext_resource type="Script" path="res://scripts/donfan_controller.gd" id="11_74va8"]
+[ext_resource type="Script" path="res://scripts/collector_controller.gd" id="12_0dauf"]
+[ext_resource type="Script" path="res://scripts/steer_offset_indicator.gd" id="13_vp31h"]
+[ext_resource type="PackedScene" uid="uid://c5aa1tt1uxd0i" path="res://controls/steer_wheel.tscn" id="14_10mmx"]
+[ext_resource type="PackedScene" uid="uid://d8u6tnxsamax" path="res://controls/cmd_vel_indicator.tscn" id="15_2luak"]
+
+[node name="Panel" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_vm7p2")
+script = ExtResource("2_3tkds")
+
+[node name="MainController" type="Control" parent="MarginContainer"]
+layout_mode = 2
+script = ExtResource("3_oi048")
+
+[node name="TabContainer" type="TabContainer" parent="MarginContainer/MainController"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+tab_alignment = 1
+
+[node name="Log" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+layout_mode = 2
+
+[node name="RosOutViewer" parent="MarginContainer/MainController/TabContainer/Log" instance=ExtResource("4_vqv0p")]
+layout_mode = 1
+
+[node name="Connection" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="ConnectionIndicator" parent="MarginContainer/MainController/TabContainer/Connection" instance=ExtResource("5_2ccwf")]
+layout_mode = 1
+
+[node name="SteerGain" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SteerGainController" parent="MarginContainer/MainController/TabContainer/SteerGain" instance=ExtResource("6_waxgt")]
+layout_mode = 1
+size_flags_vertical = 3
+display_name = "Steer"
+node_name = "/can_bridge"
+parameter_base = "steer"
+
+[node name="Min" parent="MarginContainer/MainController/TabContainer/SteerGain/SteerGainController" index="4"]
+min_value = -1.0
+
+[node name="Max" parent="MarginContainer/MainController/TabContainer/SteerGain/SteerGainController" index="5"]
+max_value = 1.0
+
+[node name="DriveGain" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="DriveGainController" parent="MarginContainer/MainController/TabContainer/DriveGain" instance=ExtResource("6_waxgt")]
+layout_mode = 1
+size_flags_vertical = 3
+display_name = "Drive"
+node_name = "/can_bridge"
+parameter_base = "drive"
+
+[node name="Mech" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ArmAngleController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("7_8lga2")
+
+[node name="Slider" parent="MarginContainer/MainController/TabContainer/Mech/ArmAngleController" instance=ExtResource("8_36cg0")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+display_name = "お助け角度"
+save_name = "arm_angle"
+value_format = "%5.0f [deg]"
+button_name_format = "%s (%0.0f [deg])"
+max_value = 90.0
+preset_names = Array[String](["展開", "退避", "格納"])
+preset_values = Array[float]([90.0, 70.0, 0.0])
+
+[node name="ArmLengthController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("9_02u3r")
+
+[node name="Slider" parent="MarginContainer/MainController/TabContainer/Mech/ArmLengthController" instance=ExtResource("8_36cg0")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+display_name = "お助け長さ"
+save_name = "arm_length"
+button_name_format = "%s (%0.0f [mm])"
+max_value = 300.0
+preset_names = Array[String](["ミックス", "ぶどう", "ブルーベリー", "格納"])
+preset_values = Array[float]([300.0, 200.0, 100.0, 0.0])
+
+[node name="ExpanderController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("10_yswmu")
+
+[node name="Slider" parent="MarginContainer/MainController/TabContainer/Mech/ExpanderController" instance=ExtResource("8_36cg0")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+display_name = "ロジャー"
+save_name = "expander"
+button_name_format = "%s (%0.0f [mm])"
+max_value = 300.0
+preset_names = Array[String](["もも", "みかん", "キウイ", "格納"])
+preset_values = Array[float]([300.0, 200.0, 100.0, 0.0])
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Mech"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DonfanController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("11_74va8")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/DonfanController"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/DonfanController/VBoxContainer"]
+layout_mode = 2
+text = "ドンファン"
+
+[node name="Extend" type="Button" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/DonfanController/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "展開"
+
+[node name="Retract" type="Button" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/DonfanController/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "格納"
+
+[node name="CollectorController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+script = ExtResource("12_0dauf")
+
+[node name="CheckButton" type="CheckButton" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/CollectorController"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+text = "下回収"
+
+[node name="SteerOffsetController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("13_vp31h")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/SteerOffsetController"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/SteerOffsetController/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+
+[node name="SteerWheel0" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/SteerOffsetController/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
+layout_mode = 2
+
+[node name="SteerWheel3" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/SteerOffsetController/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
+layout_mode = 2
+
+[node name="SteerWheel1" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/SteerOffsetController/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
+layout_mode = 2
+
+[node name="SteerWheel2" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/SteerOffsetController/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
+layout_mode = 2
+
+[node name="CmdVelIndicator" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer" instance=ExtResource("15_2luak")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer/Mech"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[editable path="MarginContainer/MainController/TabContainer/SteerGain/SteerGainController"]

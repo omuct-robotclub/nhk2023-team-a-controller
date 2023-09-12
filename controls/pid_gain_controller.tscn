@@ -1,0 +1,64 @@
+[gd_scene load_steps=4 format=3 uid="uid://cc4ksg2t1kxax"]
+
+[ext_resource type="Script" path="res://scripts/pid_gain_controller.gd" id="1_ehmuk"]
+[ext_resource type="PackedScene" uid="uid://d3nuevgxuea1c" path="res://controls/parameter_slider.tscn" id="2_tinm3"]
+[ext_resource type="PackedScene" uid="uid://d0ej8q12otx8p" path="res://controls/parameter_button.tscn" id="3_8jfud"]
+
+[node name="PidGainController" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ehmuk")
+
+[node name="Label" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Kp" parent="." instance=ExtResource("2_tinm3")]
+unique_name_in_owner = true
+layout_mode = 2
+label_format = "Kp  %7.3f"
+max_value = 10.0
+
+[node name="Ki" parent="." instance=ExtResource("2_tinm3")]
+unique_name_in_owner = true
+layout_mode = 2
+label_format = "Ki  %7.3f"
+max_value = 10.0
+
+[node name="Kd" parent="." instance=ExtResource("2_tinm3")]
+unique_name_in_owner = true
+layout_mode = 2
+label_format = "Kd  %7.3f"
+max_value = 1.0
+
+[node name="Min" parent="." instance=ExtResource("2_tinm3")]
+unique_name_in_owner = true
+layout_mode = 2
+label_format = "Min %7.3f"
+min_value = -50.0
+max_value = 1.45519e-11
+
+[node name="Max" parent="." instance=ExtResource("2_tinm3")]
+unique_name_in_owner = true
+layout_mode = 2
+label_format = "Max %7.3f"
+max_value = 50.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Antiwindup" parent="HBoxContainer" instance=ExtResource("3_8jfud")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Antiwindup"
+
+[node name="UseVelocityForDTerm" parent="HBoxContainer" instance=ExtResource("3_8jfud")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Use velocity for D term"

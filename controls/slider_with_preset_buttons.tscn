@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3 uid="uid://do7v7wvbjylin"]
+
+[ext_resource type="Script" path="res://scripts/slider_with_preset_buttons.gd" id="1_uxpop"]
+
+[node name="Slider" type="HBoxContainer"]
+offset_right = 1920.0
+offset_bottom = 1053.0
+size_flags_vertical = 3
+script = ExtResource("1_uxpop")
+value_format = "%5.0f [mm]"
+button_name_format = "%s   (%5.0f [mm])"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_bottom = 100
+
+[node name="Slider" type="VSlider" parent="MarginContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 1.45519e-11)
+layout_mode = 2
+size_flags_horizontal = 4
+max_value = 500.0
+allow_greater = true
+allow_lesser = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NameLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CurrentValueLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 2
+
+[node name="Buttons" type="VBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
