@@ -4,7 +4,7 @@ extends Panel
 
 func _ready() -> void:
     check_button.toggled.connect(
-        func():
+        func(button_pressed: bool):
             RobotInterface.set_collector_cmd(check_button.button_pressed)
     )
     RobotInterface.collector_cmd_changed.connect(
