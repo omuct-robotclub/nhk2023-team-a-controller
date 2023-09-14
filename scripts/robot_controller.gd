@@ -30,7 +30,7 @@ func _timer_callback() -> void:
     var now := Time.get_ticks_msec()
     var dt := (now - _prev_time) * 1e-3
     _prev_time = now
-    for device in Input.get_connected_joypads():
+    for device in CustomInput.allowed_device:
         var reverse := _is_reverse(device)
         if Input.is_joy_button_pressed(device, JOY_BUTTON_X):
             if reverse:
@@ -55,6 +55,7 @@ func _input(event: InputEvent) -> void:
     var reverse := _is_reverse(event.device)
 
     if event is InputEventJoypadButton and event.pressed:
+        if event.device not in CustomInput.allowed_device: return
         match event.button_index:
             JOY_BUTTON_A:
                 RobotInterface.set_collector_cmd(not RobotInterface.collector_cmd)
