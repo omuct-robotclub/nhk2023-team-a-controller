@@ -1,5 +1,6 @@
 # Godot 4+ specific ignores
-.godot/
+.godot/*
+!.godot/export_credentials.cfg
 .vscode
 *.apk
 *.apk.idsig
