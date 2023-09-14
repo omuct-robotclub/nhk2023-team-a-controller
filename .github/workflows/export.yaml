@@ -32,17 +32,11 @@ jobs:
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v2
-    
-    - name: create keystore file
-      id: create_keystore_file
+
+    - name: Copy export_credentials.cfg
       run: |
-        echo '${{ secrets.DEBUG_KEYSTORE_BASE64 }}' | base64 --decode > /tmp/debug.keystore
-        sed 's@keystore/release=".*"@keystore/release="'/tmp/debug.keystore'"@g' -i export_presets.cfg
-        sed 's@keystore/release_user=".*"@keystore/release_user="'${{ secrets.DEBUG_KEYSTORE_USER }}'"@g' -i export_presets.cfg
-        sed 's@keystore/release_password=".*"@keystore/release_password="'${{ secrets.DEBUG_KEYSTORE_PASS }}'"@g' -i export_presets.cfg
-        sed 's@keystore/debug=".*"@keystore/debug="'/tmp/debug.keystore'"@g' -i export_presets.cfg
-        sed 's@keystore/debug_user=".*"@keystore/debug_user="'${{ secrets.DEBUG_KEYSTORE_USER }}'"@g' -i export_presets.cfg
-        sed 's@keystore/debug_password=".*"@keystore/debug_password="'${{ secrets.DEBUG_KEYSTORE_PASS }}'"@g' -i export_presets.cfg
+        mkdir -p .godot
+        cp export_credentials.cfg .godot/export_credentials.cfg
   
     - name: export game
       id: export
