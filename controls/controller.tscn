@@ -154,7 +154,7 @@ grow_vertical = 2
 display_name = "ロジャー"
 save_name = "expander"
 button_name_format = "%s (%0.0f [mm])"
-max_value = 300.0
+max_value = 1000.0
 preset_names = Array[String](["もも", "みかん", "キウイ", "格納"])
 preset_values = Array[float]([300.0, 200.0, 100.0, 0.0])
 
