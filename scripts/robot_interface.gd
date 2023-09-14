@@ -1,5 +1,6 @@
 extends Node
 
+signal cmd_vel_frame_changed()
 signal donfan_cmd_changed()
 signal expander_length_changed()
 signal collector_cmd_changed()
@@ -7,6 +8,7 @@ signal arm_length_changed()
 signal arm_angle_changed()
 signal large_wheel_cmd_changed()
 
+var cmd_vel_frame := "base_footprint"
 var donfan_cmd: int
 var expander_length: float
 var collector_cmd: bool
@@ -18,7 +20,7 @@ var target_linear_velocity := Vector2()
 var target_angular_velocity := 0.0
 
 var _publish_command_timer := Timer.new()
-@onready var _cmd_vel_pub := rosbridge.create_publisher("geometry_msgs/Twist", "cmd_vel")
+@onready var _cmd_vel_stamped_pub := rosbridge.create_publisher("geometry_msgs/TwistStamped", "cmd_vel_stamped")
 @warning_ignore("unused_private_class_variable")
 @onready var _cmd_vel_filtered_sub := rosbridge.create_subscription("geometry_msgs/Twist", "cmd_vel_filtered", _cmd_vel_filtered_callback)
 var _filtered_linear_vel := Vector2()
@@ -44,13 +46,18 @@ func _cmd_vel_filtered_callback(msg: Dictionary) -> void:
     _filtered_angular_vel = msg.angular.z
 
 func _publish_command() -> void:
-    _cmd_vel_pub.publish({
-        "linear": {
-            "x": target_linear_velocity.x,
-            "y": target_linear_velocity.y
+    _cmd_vel_stamped_pub.publish({
+        "header": {
+            "frame_id": cmd_vel_frame
         },
-        "angular": {
-            "z": target_angular_velocity
+        "twist": {
+            "linear": {
+                "x": target_linear_velocity.x,
+                "y": target_linear_velocity.y
+            },
+            "angular": {
+                "z": target_angular_velocity
+            }
         }
     })
 
@@ -59,6 +66,10 @@ func get_filtered_target_angular_velocity() -> float: return _filtered_angular_v
 
 func start_unwinding() -> void:
     _unwind_cli.call_service({})
+
+func set_cmd_vel_frame(frame: String) -> void:
+    cmd_vel_frame = frame
+    cmd_vel_frame_changed.emit()
 
 func set_donfan_cmd(dir: int) -> void:
     donfan_cmd = dir

@@ -42,7 +42,6 @@ static func _level_to_color(level: int) -> Color:
     else: return Color.DARK_RED
 
 func _rosout_callback(msg: Dictionary) -> void:
-    print(msg)
     var level_text := _level_to_text(msg["level"])
     var level_color := _level_to_color(msg["level"])
     var item := tree.create_item(root)

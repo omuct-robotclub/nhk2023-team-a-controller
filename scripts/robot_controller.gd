@@ -9,7 +9,7 @@ var tim_ := Timer.new()
 var collecting_ := false
 var all_expanding_ := false
 
-@onready var cmd_vel_indicator_: Panel = %CmdVelIndicator
+@onready var cmd_vel_indicator_: Control = %CmdVelIndicator
 
 func _ready() -> void:
     add_child(tim_)

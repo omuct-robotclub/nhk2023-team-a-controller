@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://cgn8t07t2if4f"]
+[gd_scene load_steps=17 format=3 uid="uid://cgn8t07t2if4f"]
 
 [ext_resource type="Theme" uid="uid://baqy2s2jpay2" path="res://theme.tres" id="1_vm7p2"]
 [ext_resource type="Script" path="res://scripts/avoid_notch.gd" id="2_3tkds"]
@@ -12,9 +12,10 @@
 [ext_resource type="Script" path="res://scripts/expander_controller.gd" id="10_yswmu"]
 [ext_resource type="Script" path="res://scripts/donfan_controller.gd" id="11_74va8"]
 [ext_resource type="Script" path="res://scripts/collector_controller.gd" id="12_0dauf"]
+[ext_resource type="Script" path="res://scripts/base_frame_selector.gd" id="13_d5gog"]
 [ext_resource type="Script" path="res://scripts/steer_offset_indicator.gd" id="13_vp31h"]
 [ext_resource type="PackedScene" uid="uid://c5aa1tt1uxd0i" path="res://controls/steer_wheel.tscn" id="14_10mmx"]
-[ext_resource type="PackedScene" uid="uid://d8u6tnxsamax" path="res://controls/cmd_vel_indicator.tscn" id="15_2luak"]
+[ext_resource type="PackedScene" uid="uid://d8u6tnxsamax" path="res://controls/target_vel_indicator.tscn" id="15_2luak"]
 
 [node name="Panel" type="Panel"]
 anchors_preset = 15
@@ -47,50 +48,7 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 50
 tab_alignment = 1
 
-[node name="Log" type="Panel" parent="MarginContainer/MainController/TabContainer"]
-layout_mode = 2
-
-[node name="RosOutViewer" parent="MarginContainer/MainController/TabContainer/Log" instance=ExtResource("4_vqv0p")]
-layout_mode = 1
-
-[node name="Connection" type="Panel" parent="MarginContainer/MainController/TabContainer"]
-visible = false
-layout_mode = 2
-
-[node name="ConnectionIndicator" parent="MarginContainer/MainController/TabContainer/Connection" instance=ExtResource("5_2ccwf")]
-layout_mode = 1
-
-[node name="SteerGain" type="Panel" parent="MarginContainer/MainController/TabContainer"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SteerGainController" parent="MarginContainer/MainController/TabContainer/SteerGain" instance=ExtResource("6_waxgt")]
-layout_mode = 1
-size_flags_vertical = 3
-display_name = "Steer"
-node_name = "/can_bridge"
-parameter_base = "steer"
-
-[node name="Min" parent="MarginContainer/MainController/TabContainer/SteerGain/SteerGainController" index="4"]
-min_value = -1.0
-
-[node name="Max" parent="MarginContainer/MainController/TabContainer/SteerGain/SteerGainController" index="5"]
-max_value = 1.0
-
-[node name="DriveGain" type="Panel" parent="MarginContainer/MainController/TabContainer"]
-visible = false
-layout_mode = 2
-
-[node name="DriveGainController" parent="MarginContainer/MainController/TabContainer/DriveGain" instance=ExtResource("6_waxgt")]
-layout_mode = 1
-size_flags_vertical = 3
-display_name = "Drive"
-node_name = "/can_bridge"
-parameter_base = "drive"
-
 [node name="Mech" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer"]
-visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -237,14 +195,77 @@ layout_mode = 2
 [node name="SteerWheel2" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/SteerOffsetController/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
 layout_mode = 2
 
-[node name="CmdVelIndicator" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer" instance=ExtResource("15_2luak")]
+[node name="Panel" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CmdVelIndicator" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/Panel" instance=ExtResource("15_2luak")]
 unique_name_in_owner = true
 layout_mode = 2
+anchors_preset = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer/Mech"]
+[node name="MenuButton" type="MenuButton" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/Panel"]
+layout_mode = 1
+offset_right = 253.0
+offset_bottom = 92.0
+text = "Base Frame"
+alignment = 0
+vertical_icon_alignment = 0
+item_count = 3
+popup/item_0/text = "base_footprint"
+popup/item_0/checkable = 2
+popup/item_0/id = 0
+popup/item_1/text = "odom"
+popup/item_1/checkable = 2
+popup/item_1/id = 1
+popup/item_2/text = "map"
+popup/item_2/checkable = 2
+popup/item_2/id = 2
+script = ExtResource("13_d5gog")
+
+[node name="Log" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
 layout_mode = 2
+
+[node name="RosOutViewer" parent="MarginContainer/MainController/TabContainer/Log" instance=ExtResource("4_vqv0p")]
+layout_mode = 1
+
+[node name="Connection" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="ConnectionIndicator" parent="MarginContainer/MainController/TabContainer/Connection" instance=ExtResource("5_2ccwf")]
+layout_mode = 1
+
+[node name="SteerGain" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SteerGainController" parent="MarginContainer/MainController/TabContainer/SteerGain" instance=ExtResource("6_waxgt")]
+layout_mode = 1
 size_flags_vertical = 3
+display_name = "Steer"
+node_name = "/can_bridge"
+parameter_base = "steer"
+
+[node name="Min" parent="MarginContainer/MainController/TabContainer/SteerGain/SteerGainController" index="4"]
+min_value = -1.0
+
+[node name="Max" parent="MarginContainer/MainController/TabContainer/SteerGain/SteerGainController" index="5"]
+max_value = 1.0
+
+[node name="DriveGain" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="DriveGainController" parent="MarginContainer/MainController/TabContainer/DriveGain" instance=ExtResource("6_waxgt")]
+layout_mode = 1
+size_flags_vertical = 3
+display_name = "Drive"
+node_name = "/can_bridge"
+parameter_base = "drive"
 
 [editable path="MarginContainer/MainController/TabContainer/SteerGain/SteerGainController"]

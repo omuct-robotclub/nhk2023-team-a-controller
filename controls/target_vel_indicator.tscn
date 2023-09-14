@@ -2,15 +2,8 @@
 
 [ext_resource type="Script" path="res://scripts/target_vel_indicator.gd" id="1_f3rq2"]
 
-[node name="CmdVelIndicator" type="Panel"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Control" type="Control" parent="."]
-layout_mode = 1
+[node name="CmdVelIndicator" type="Control"]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
