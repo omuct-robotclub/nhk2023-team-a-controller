@@ -3,7 +3,7 @@ extends Label
 
 func _ready() -> void:
     var release := _get_release()
-    text = "Version: %s   Build date: %s" % [release["version"], release["date"]]
+    text = "Version: %s   Build date: %s      " % [release["version"], release["date"]]
 
 static func _get_release() -> Dictionary:
     var result: Dictionary
