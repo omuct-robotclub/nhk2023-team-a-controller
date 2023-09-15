@@ -35,7 +35,7 @@ jobs:
         {
           echo '{'
           echo '  "version": "${{ github.ref_name }}",'
-          echo "  \"date\": \"$(date +'%Y/%m/%d %H:%M:%S')\""
+          echo "  \"date\": \"$(TZ=Asia/Tokyo date +'%Y/%m/%d %H:%M:%S')\""
           echo '}'
         } >release.json
         cat release.json
