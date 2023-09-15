@@ -29,6 +29,16 @@ jobs:
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v2
+    
+    - name: Create release.json
+      run: |
+        {
+          echo '{'
+          echo '  "version": "${{ github.ref_name }}",'
+          echo "  \"date\": \"$(date +'%Y/%m/%d %H:%M:%S')\""
+          echo '}'
+        } >release.json
+        cat release.json
 
     - name: Export Game
       id: export
