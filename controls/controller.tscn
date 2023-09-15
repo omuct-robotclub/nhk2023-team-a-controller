@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cgn8t07t2if4f"]
+[gd_scene load_steps=19 format=3 uid="uid://cgn8t07t2if4f"]
 
 [ext_resource type="Theme" uid="uid://baqy2s2jpay2" path="res://theme.tres" id="1_vm7p2"]
 [ext_resource type="Script" path="res://scripts/avoid_notch.gd" id="2_3tkds"]
@@ -17,6 +17,7 @@
 [ext_resource type="Script" path="res://scripts/steer_offset_indicator.gd" id="13_vp31h"]
 [ext_resource type="PackedScene" uid="uid://c5aa1tt1uxd0i" path="res://controls/steer_wheel.tscn" id="14_10mmx"]
 [ext_resource type="PackedScene" uid="uid://d8u6tnxsamax" path="res://controls/target_vel_indicator.tscn" id="15_2luak"]
+[ext_resource type="Script" path="res://scripts/open_download_page_button.gd" id="18_ru0ij"]
 
 [node name="Panel" type="Panel"]
 anchors_preset = 15
@@ -282,9 +283,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Button" type="Button" parent="MarginContainer/MainController/TabContainer/Misc/VBoxContainer"]
+[node name="RemovePresetsButton" type="Button" parent="MarginContainer/MainController/TabContainer/Misc/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 text = "Reset Presets"
 script = ExtResource("4_0p5sv")
+
+[node name="OpenDownloadPageButton" type="Button" parent="MarginContainer/MainController/TabContainer/Misc/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Open Download Page"
+script = ExtResource("18_ru0ij")
 
 [editable path="MarginContainer/MainController/TabContainer/SteerGain/SteerGainController"]
