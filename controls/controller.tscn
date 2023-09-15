@@ -1,8 +1,9 @@
-[gd_scene load_steps=17 format=3 uid="uid://cgn8t07t2if4f"]
+[gd_scene load_steps=18 format=3 uid="uid://cgn8t07t2if4f"]
 
 [ext_resource type="Theme" uid="uid://baqy2s2jpay2" path="res://theme.tres" id="1_vm7p2"]
 [ext_resource type="Script" path="res://scripts/avoid_notch.gd" id="2_3tkds"]
 [ext_resource type="Script" path="res://scripts/robot_controller.gd" id="3_oi048"]
+[ext_resource type="Script" path="res://scripts/reset_presets_button.gd" id="4_0p5sv"]
 [ext_resource type="PackedScene" uid="uid://muuiqpin0e6h" path="res://controls/rosout_viewer.tscn" id="4_vqv0p"]
 [ext_resource type="PackedScene" uid="uid://d3u0tvvu78rlr" path="res://controls/connection_indicator.tscn" id="5_2ccwf"]
 [ext_resource type="PackedScene" uid="uid://cc4ksg2t1kxax" path="res://controls/pid_gain_controller.tscn" id="6_waxgt"]
@@ -49,6 +50,7 @@ theme_override_font_sizes/font_size = 50
 tab_alignment = 1
 
 [node name="Mech" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -70,9 +72,10 @@ display_name = "お助け角度"
 save_name = "arm_angle"
 value_format = "%5.0f [deg]"
 button_name_format = "%s (%0.0f [deg])"
-max_value = 90.0
-preset_names = Array[String](["展開", "退避", "格納"])
-preset_values = Array[float]([90.0, 70.0, 0.0])
+min_value = -60.0
+max_value = 100.0
+preset_names = Array[String](["展開", "水平", "格納"])
+preset_values = Array[float]([100.0, 1.45519e-11, -60.0])
 
 [node name="ArmLengthController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech"]
 layout_mode = 2
@@ -267,5 +270,21 @@ size_flags_vertical = 3
 display_name = "Drive"
 node_name = "/can_bridge"
 parameter_base = "drive"
+
+[node name="Misc" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Misc"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button" type="Button" parent="MarginContainer/MainController/TabContainer/Misc/VBoxContainer"]
+layout_mode = 2
+text = "Reset Presets"
+script = ExtResource("4_0p5sv")
 
 [editable path="MarginContainer/MainController/TabContainer/SteerGain/SteerGainController"]
