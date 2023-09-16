@@ -37,14 +37,14 @@ func _timer_callback() -> void:
                 RobotInterface.arm_length -= 0.5 * dt
             else:
                 RobotInterface.arm_length += 0.5 * dt
-            RobotInterface.set_arm_length(clampf(RobotInterface.arm_length, 0.0, 1.0))
+            RobotInterface.set_arm_length(clampf(RobotInterface.arm_length, 0.0, 0.9))
 
         if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
             if reverse:
                 RobotInterface.arm_angle -= deg_to_rad(10.0) * dt
             else:
                 RobotInterface.arm_angle += deg_to_rad(10.0) * dt
-            RobotInterface.set_arm_angle(clampf(RobotInterface.arm_angle, 0.0, deg_to_rad(120.0)))
+            RobotInterface.set_arm_angle(clampf(RobotInterface.arm_angle, 0.0, deg_to_rad(110.0)))
 
 func _input(event: InputEvent) -> void:
     var tgt_linear_vel := get_linear_vel() * max_linear_speed

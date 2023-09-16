@@ -74,7 +74,7 @@ save_name = "arm_angle"
 value_format = "%5.0f [deg]"
 button_name_format = "%s (%0.0f [deg])"
 min_value = -60.0
-max_value = 100.0
+max_value = 110.0
 preset_names = Array[String](["展開", "水平", "格納"])
 preset_values = Array[float]([100.0, 1.45519e-11, -60.0])
 
@@ -95,7 +95,7 @@ grow_vertical = 2
 display_name = "お助け長さ"
 save_name = "arm_length"
 button_name_format = "%s (%0.0f [mm])"
-max_value = 300.0
+max_value = 900.0
 preset_names = Array[String](["ミックス", "ぶどう", "ブルーベリー", "格納"])
 preset_values = Array[float]([300.0, 200.0, 100.0, 0.0])
 
