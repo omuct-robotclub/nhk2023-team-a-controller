@@ -160,7 +160,7 @@ class Publisher:
         _bridge._publish(_id, _topic, msg)
 
     func _notification(what):
-        if what == NOTIFICATION_PREDELETE:
+        if what == NOTIFICATION_PREDELETE and is_instance_valid(_bridge):
             _bridge._unadvertise(_id, _topic)
 
 func create_publisher(type: String, topic: String) -> Publisher:
@@ -177,9 +177,8 @@ class Subscription:
     var _topic: String
 
     func _notification(what):
-        if what == NOTIFICATION_PREDELETE:
-            if is_instance_valid(_bridge):
-                _bridge._unsubscribe(_id, _topic)
+        if what == NOTIFICATION_PREDELETE and is_instance_valid(_bridge):
+            _bridge._unsubscribe(_id, _topic)
 
 func create_subscription(type: String, topic: String, callback: Callable, throttle_rate:=0, queue_length:=0) -> Subscription:
     var result = Subscription.new()
@@ -291,7 +290,7 @@ class ParameterEventHandler extends RefCounted:
         _id = id
 
     func _notification(what: int) -> void:
-        if what == NOTIFICATION_PREDELETE:
+        if what == NOTIFICATION_PREDELETE and is_instance_valid(_br):
             _br._unregister_param_event_callback(_id, _node_name)
 
 func create_parameter_event_handler(node_name: String, callback: Callable) -> ParameterEventHandler:
