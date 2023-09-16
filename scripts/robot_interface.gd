@@ -26,13 +26,13 @@ var _publish_command_timer := Timer.new()
 var _filtered_linear_vel := Vector2()
 var _filtered_angular_vel := 0.0
 
-@onready var _unwind_cli := rosbridge.create_client("unwind")
-@onready var _donfan_cmd_pub := rosbridge.create_publisher("std_msgs/Int8", "donfan_cmd")
-@onready var _expander_length_pub := rosbridge.create_publisher("std_msgs/Float64", "expander_length")
-@onready var _collector_cmd_pub := rosbridge.create_publisher("std_msgs/Bool", "collector_cmd")
-@onready var _arm_angle_pub := rosbridge.create_publisher("std_msgs/Float64", "arm_angle")
-@onready var _arm_length_pub := rosbridge.create_publisher("std_msgs/Float64", "arm_length")
-@onready var _large_wheel_cmd_pub := rosbridge.create_publisher("std_msgs/Float64", "large_wheel_cmd")
+var _unwind_cli := rosbridge.create_client("unwind")
+var _donfan_cmd_pub := rosbridge.create_publisher("std_msgs/Int8", "donfan_cmd")
+var _expander_length_pub := rosbridge.create_publisher("std_msgs/Float64", "expander_length")
+var _collector_cmd_pub := rosbridge.create_publisher("std_msgs/Bool", "collector_cmd")
+var _arm_angle_pub := rosbridge.create_publisher("std_msgs/Float64", "arm_angle")
+var _arm_length_pub := rosbridge.create_publisher("std_msgs/Float64", "arm_length")
+var _large_wheel_cmd_pub := rosbridge.create_publisher("std_msgs/Float64", "large_wheel_cmd")
 
 func init() -> void:
     _publish_command_timer.wait_time = 0.01

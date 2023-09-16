@@ -57,7 +57,7 @@ func _save_presets() -> void:
         push_error(error_string(FileAccess.get_open_error()))
         return
     
-    var data: Array[Dictionary]
+    var data: Array[Dictionary] = []
     for i in range(preset_names.size()):
         data.push_back({"name": preset_names[i], "value": preset_values[i]})
 

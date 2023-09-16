@@ -13,7 +13,7 @@ func _ready() -> void:
     _tim = Timer.new()
     _tim.one_shot = true
     add_child(_tim)
-    _tim.wait_time - long_press_time
+    _tim.wait_time = long_press_time
     _tim.timeout.connect(
         func():
             self_modulate = Color.AQUA

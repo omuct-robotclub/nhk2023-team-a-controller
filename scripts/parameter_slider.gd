@@ -30,7 +30,7 @@ func init() -> void:
             _update_label()
     )
     slider.drag_ended.connect(
-        func(value_changed: bool):
+        func(_value_changed: bool):
             _param.set_value(slider.value)
     )
     _param.value_updated.connect(

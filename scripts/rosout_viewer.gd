@@ -5,6 +5,7 @@ extends VBoxContainer
 @onready var autoscroll_button: CheckButton = %AutoscrollButton
 @onready var tree: Tree = %Tree
 @onready var root := tree.create_item()
+@warning_ignore("unused_private_class_variable")
 @onready var _rosout_sub := rosbridge.create_subscription("rcl_interfaces/Log", "/rosout", _rosout_callback)
 
 var _msg_count := 0
@@ -25,7 +26,7 @@ func _ready() -> void:
     tree.set_column_title(2, "Node")
     tree.set_column_title(3, "Severity")
 
-static func _level_to_text(level: int) -> String:
+func _level_to_text(level: int) -> String:
     if level <= 10: return "DEBUG"
     elif level <= 20: return "INFO"
     elif level <= 30: return "WARN"
@@ -33,7 +34,7 @@ static func _level_to_text(level: int) -> String:
     elif level <= 50: return "FATAL"
     else: return "FATAL"
 
-static func _level_to_color(level: int) -> Color:
+func _level_to_color(level: int) -> Color:
     if level <= 10: return Color.DIM_GRAY
     elif level <= 20: return Color.WHITE
     elif level <= 30: return Color.ORANGE

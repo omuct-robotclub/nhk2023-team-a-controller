@@ -29,9 +29,9 @@ func _ready() -> void:
     
     rosbridge.transport_changed.connect(
         func():
-            var tr := rosbridge.get_current_transport()
-            if tr != null:
-                transport_name_label.text = "Transport: %s" % tr.get_name()
+            var transport := rosbridge.get_current_transport()
+            if transport != null:
+                transport_name_label.text = "Transport: %s" % transport.get_name()
             else:
                 transport_name_label.text = "Transport: Not Set"
     )

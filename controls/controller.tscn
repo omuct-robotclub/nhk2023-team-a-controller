@@ -52,7 +52,6 @@ theme_override_font_sizes/font_size = 50
 tab_alignment = 1
 
 [node name="Mech" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer"]
-visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -117,7 +116,7 @@ grow_vertical = 2
 display_name = "ロジャー"
 save_name = "expander"
 button_name_format = "%s (%0.0f [mm])"
-max_value = 1000.0
+max_value = 900.0
 preset_names = Array[String](["もも", "みかん", "キウイ", "格納"])
 preset_values = Array[float]([300.0, 200.0, 100.0, 0.0])
 
@@ -274,6 +273,7 @@ node_name = "/can_bridge"
 parameter_base = "drive"
 
 [node name="Misc" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Misc"]

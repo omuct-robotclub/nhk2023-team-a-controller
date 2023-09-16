@@ -56,13 +56,20 @@ func _input(event: InputEvent) -> void:
 
     if event is InputEventJoypadButton and event.pressed:
         if event.device not in CustomInput.allowed_device: return
+        print(event.button_index)
         match event.button_index:
             JOY_BUTTON_A:
                 RobotInterface.set_collector_cmd(not RobotInterface.collector_cmd)
 
             JOY_BUTTON_RIGHT_STICK:
                 if RobotInterface.large_wheel_cmd == 0:
-                    RobotInterface.set_large_wheel_cmd(1.0)
+                    RobotInterface.set_large_wheel_cmd(0.3333)
+                else:
+                    RobotInterface.set_large_wheel_cmd(0.0)
+
+            JOY_BUTTON_MISC1:
+                if RobotInterface.large_wheel_cmd == 0:
+                    RobotInterface.set_large_wheel_cmd(0.3333)
                 else:
                     RobotInterface.set_large_wheel_cmd(0.0)
 
@@ -71,10 +78,28 @@ func _input(event: InputEvent) -> void:
 
             JOY_BUTTON_Y:
                 if reverse:
-                    RobotInterface.set_donfan_cmd(-1)
-                    RobotInterface.set_expander_length(0.0)
-                    RobotInterface.set_arm_angle(0)
+                    _retract_all()
                 else:
-                    RobotInterface.set_donfan_cmd(1)
-                    RobotInterface.set_expander_length(2.0)
-                    RobotInterface.set_arm_angle(deg_to_rad(90))
+                    _expand_all()
+
+var _working := false
+
+func _expand_all() -> void:
+    if _working: return
+    _working = true
+    RobotInterface.set_donfan_cmd(1)
+    await get_tree().create_timer(1.0).timeout
+    RobotInterface.set_expander_length(1.0)
+    await get_tree().create_timer(1.0).timeout
+    RobotInterface.set_arm_angle(deg_to_rad(100))
+    _working = false
+
+func _retract_all() -> void:
+    if _working: return
+    _working = true
+    RobotInterface.set_arm_angle(0)
+    await get_tree().create_timer(1.0).timeout
+    RobotInterface.set_expander_length(0.0)
+    await get_tree().create_timer(1.0).timeout
+    RobotInterface.set_donfan_cmd(-1)
+    _working = false
