@@ -76,7 +76,7 @@ func poll() -> void:
                 var url := "ws://" + str(server_ip) + ":9090"
                 print("connecting to " + url)
                 var err := _cli.connect_to_url(url)
-                assert(err == OK)
+#                assert(err == OK)
                 return
     elif _cli.get_ready_state() == WebSocketPeer.STATE_OPEN:
         if _socket.get_available_packet_count() > 0:

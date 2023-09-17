@@ -1,6 +1,7 @@
 extends Node
 
 signal cmd_vel_frame_changed()
+signal cmd_vel_publisher_enabled_changed()
 signal donfan_cmd_changed()
 signal expander_length_changed()
 signal collector_cmd_changed()
@@ -8,6 +9,7 @@ signal arm_length_changed()
 signal arm_angle_changed()
 signal large_wheel_cmd_changed()
 
+var cmd_vel_publisher_enabled := true
 var cmd_vel_frame := "base_footprint"
 var donfan_cmd: int
 var expander_length: float
@@ -46,20 +48,21 @@ func _cmd_vel_filtered_callback(msg: Dictionary) -> void:
     _filtered_angular_vel = msg.angular.z
 
 func _publish_command() -> void:
-    _cmd_vel_stamped_pub.publish({
-        "header": {
-            "frame_id": cmd_vel_frame
-        },
-        "twist": {
-            "linear": {
-                "x": target_linear_velocity.x,
-                "y": target_linear_velocity.y
+    if cmd_vel_publisher_enabled:
+        _cmd_vel_stamped_pub.publish({
+            "header": {
+                "frame_id": cmd_vel_frame
             },
-            "angular": {
-                "z": target_angular_velocity
+            "twist": {
+                "linear": {
+                    "x": target_linear_velocity.x,
+                    "y": target_linear_velocity.y
+                },
+                "angular": {
+                    "z": target_angular_velocity
+                }
             }
-        }
-    })
+        })
 
 func get_filtered_target_linear_velocity() -> Vector2: return _filtered_linear_vel
 func get_filtered_target_angular_velocity() -> float: return _filtered_angular_vel
@@ -70,6 +73,10 @@ func start_unwinding() -> void:
 func set_cmd_vel_frame(frame: String) -> void:
     cmd_vel_frame = frame
     cmd_vel_frame_changed.emit()
+
+func set_cmd_vel_publisher_enabled(enabled: bool) -> void:
+    cmd_vel_publisher_enabled = enabled
+    cmd_vel_publisher_enabled_changed.emit()
 
 func set_donfan_cmd(dir: int) -> void:
     donfan_cmd = dir

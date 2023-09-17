@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cgn8t07t2if4f"]
+[gd_scene load_steps=22 format=3 uid="uid://cgn8t07t2if4f"]
 
 [ext_resource type="Theme" uid="uid://baqy2s2jpay2" path="res://theme.tres" id="1_vm7p2"]
 [ext_resource type="Script" path="res://scripts/avoid_notch.gd" id="2_3tkds"]
@@ -17,6 +17,7 @@
 [ext_resource type="Script" path="res://scripts/base_frame_selector.gd" id="13_d5gog"]
 [ext_resource type="Script" path="res://scripts/steer_offset_indicator.gd" id="13_vp31h"]
 [ext_resource type="PackedScene" uid="uid://c5aa1tt1uxd0i" path="res://controls/steer_wheel.tscn" id="14_10mmx"]
+[ext_resource type="Script" path="res://scripts/cmd_vel_publisher_enable_button.gd" id="14_xppwc"]
 [ext_resource type="PackedScene" uid="uid://d8u6tnxsamax" path="res://controls/target_vel_indicator.tscn" id="15_2luak"]
 [ext_resource type="Script" path="res://scripts/open_download_page_button.gd" id="18_ru0ij"]
 [ext_resource type="Script" path="res://scripts/release_info_label.gd" id="19_57jgw"]
@@ -53,7 +54,6 @@ theme_override_font_sizes/font_size = 50
 tab_alignment = 1
 
 [node name="Mech" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer"]
-visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -76,9 +76,9 @@ save_name = "arm_angle"
 value_format = "%5.0f [deg]"
 button_name_format = "%s (%0.0f [deg])"
 min_value = -60.0
-max_value = 110.0
+max_value = 120.0
 preset_names = Array[String](["展開", "水平", "格納"])
-preset_values = Array[float]([110.0, 1.45519e-11, -60.0])
+preset_values = Array[float]([120.0, 1.45519e-11, -60.0])
 
 [node name="ArmLengthController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech"]
 layout_mode = 2
@@ -231,6 +231,16 @@ popup/item_2/checkable = 2
 popup/item_2/id = 2
 script = ExtResource("13_d5gog")
 
+[node name="CheckButton" type="CheckButton" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -194.0
+offset_bottom = 84.0
+grow_horizontal = 0
+script = ExtResource("14_xppwc")
+
 [node name="Steer" type="Panel" parent="MarginContainer/MainController/TabContainer"]
 visible = false
 layout_mode = 2
@@ -294,6 +304,7 @@ node_name = "/can_bridge"
 parameter_base = "expander"
 
 [node name="AccLimit" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MainController/TabContainer/AccLimit"]
