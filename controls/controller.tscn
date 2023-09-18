@@ -97,9 +97,9 @@ grow_vertical = 2
 display_name = "お助け長さ"
 save_name = "arm_length"
 button_name_format = "%s (%0.0f [mm])"
-max_value = 900.0
+max_value = 800.0
 preset_names = Array[String](["ミックス", "ぶどう", "ブルーベリー", "格納"])
-preset_values = Array[float]([300.0, 200.0, 100.0, 0.0])
+preset_values = Array[float]([800.0, 500.0, 300.0, 0.0])
 
 [node name="ExpanderController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech"]
 layout_mode = 2
@@ -120,7 +120,7 @@ save_name = "expander"
 button_name_format = "%s (%0.0f [mm])"
 max_value = 900.0
 preset_names = Array[String](["もも", "みかん", "キウイ", "格納"])
-preset_values = Array[float]([300.0, 200.0, 100.0, 0.0])
+preset_values = Array[float]([900.0, 700.0, 500.0, 0.0])
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Mech"]
 layout_mode = 2
@@ -281,6 +281,12 @@ display_name = "ArmAngle"
 node_name = "/can_bridge"
 parameter_base = "arm_angle"
 
+[node name="Min" parent="MarginContainer/MainController/TabContainer/ArmAngle/ArmAngleGainController" index="4"]
+min_value = -1.0
+
+[node name="Max" parent="MarginContainer/MainController/TabContainer/ArmAngle/ArmAngleGainController" index="5"]
+max_value = 1.0
+
 [node name="ArmLength" type="Panel" parent="MarginContainer/MainController/TabContainer"]
 visible = false
 layout_mode = 2
@@ -292,6 +298,12 @@ display_name = "ArmLength"
 node_name = "/can_bridge"
 parameter_base = "arm_length"
 
+[node name="Min" parent="MarginContainer/MainController/TabContainer/ArmLength/ArmLengthGainController" index="4"]
+min_value = -1.0
+
+[node name="Max" parent="MarginContainer/MainController/TabContainer/ArmLength/ArmLengthGainController" index="5"]
+max_value = 1.0
+
 [node name="Expander" type="Panel" parent="MarginContainer/MainController/TabContainer"]
 visible = false
 layout_mode = 2
@@ -302,6 +314,12 @@ size_flags_vertical = 3
 display_name = "Expander"
 node_name = "/can_bridge"
 parameter_base = "expander"
+
+[node name="Min" parent="MarginContainer/MainController/TabContainer/Expander/ExpanderGainController" index="4"]
+min_value = -1.0
+
+[node name="Max" parent="MarginContainer/MainController/TabContainer/Expander/ExpanderGainController" index="5"]
+max_value = 1.0
 
 [node name="AccLimit" type="Panel" parent="MarginContainer/MainController/TabContainer"]
 visible = false
@@ -380,3 +398,6 @@ horizontal_alignment = 2
 script = ExtResource("19_57jgw")
 
 [editable path="MarginContainer/MainController/TabContainer/Steer/SteerGainController"]
+[editable path="MarginContainer/MainController/TabContainer/ArmAngle/ArmAngleGainController"]
+[editable path="MarginContainer/MainController/TabContainer/ArmLength/ArmLengthGainController"]
+[editable path="MarginContainer/MainController/TabContainer/Expander/ExpanderGainController"]
