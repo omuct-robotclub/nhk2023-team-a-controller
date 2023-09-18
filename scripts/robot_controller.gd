@@ -63,13 +63,13 @@ func _input(event: InputEvent) -> void:
 
             JOY_BUTTON_RIGHT_STICK:
                 if RobotInterface.large_wheel_cmd == 0:
-                    RobotInterface.set_large_wheel_cmd(0.3333)
+                    RobotInterface.set_large_wheel_cmd(0.6)
                 else:
                     RobotInterface.set_large_wheel_cmd(0.0)
 
             JOY_BUTTON_MISC1:
                 if RobotInterface.large_wheel_cmd == 0:
-                    RobotInterface.set_large_wheel_cmd(0.3333)
+                    RobotInterface.set_large_wheel_cmd(0.6)
                 else:
                     RobotInterface.set_large_wheel_cmd(0.0)
 
