@@ -51,8 +51,11 @@ func _timer_callback() -> void:
     var tmp_linear := Vector2.ZERO
     var tmp_angular := 0.0
     for device in CustomInput.allowed_device:
+#        print(Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT))
         var slow_mode := Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5
-        var mul := 1.0 - Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) * 0.5
+        var shulder := clampf((Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) - 0.5) * 2, 0, 1.0)
+        var mul := 1.0 - shulder * 0.5
+        print(mul)
         tmp_linear.x += mul * -Input.get_joy_axis(device, JOY_AXIS_LEFT_Y)
         tmp_linear.y += mul * -Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
         tmp_linear.x += mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_UP) else 0.0
@@ -61,9 +64,11 @@ func _timer_callback() -> void:
         tmp_linear.y -= mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_RIGHT) else 0.0
         tmp_angular += mul * -Input.get_joy_axis(device, JOY_AXIS_RIGHT_X)
     var length := maxf(tmp_linear.length() - CustomInput.deadzone_radius, 0.0)
+    length /= 1 - CustomInput.deadzone_radius
     var ang := tmp_linear.angle()
     tmp_linear = Vector2(length, 0.0).rotated(ang)
     tmp_angular = signf(tmp_angular) * maxf(absf(tmp_angular) - CustomInput.deadzone_radius, 0.0)
+    tmp_angular /= 1 - CustomInput.deadzone_radius
     RobotInterface.target_linear_velocity = tmp_linear * max_linear_speed
     RobotInterface.target_angular_velocity = tmp_angular * max_angular_speed
 
