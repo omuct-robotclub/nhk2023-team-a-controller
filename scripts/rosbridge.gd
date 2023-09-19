@@ -177,8 +177,9 @@ class Subscription:
     var _topic: String
 
     func _notification(what):
-        if what == NOTIFICATION_PREDELETE and is_instance_valid(_bridge):
-            _bridge._unsubscribe(_id, _topic)
+        pass
+#        if what == NOTIFICATION_PREDELETE and is_instance_valid(_bridge):
+#            _bridge._unsubscribe(_id, _topic)
 
 func create_subscription(type: String, topic: String, callback: Callable, throttle_rate:=0, queue_length:=0) -> Subscription:
     var result = Subscription.new()
