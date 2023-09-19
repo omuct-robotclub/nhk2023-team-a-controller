@@ -4,8 +4,8 @@ extends Control
 @export var linear_filtered_color := Color.HOT_PINK
 @export var angular_color := Color.GREEN
 @export var angular_filtered_color := Color.GREEN_YELLOW
-@export var max_linear_velocity := 5.0
-@export var max_angular_velocity := 5.0
+@export var max_linear_velocity := 2.6
+@export var max_angular_velocity := 6.0
 
 func conv(vec: Vector2) -> Vector2:
     return Vector2(-vec.y, -vec.x)

@@ -9,9 +9,11 @@ var tim_ := Timer.new()
 var collecting_ := false
 var all_expanding_ := false
 
-@onready var cmd_vel_indicator_: Control = %CmdVelIndicator
+@onready var cmd_vel_indicator_ = %CmdVelIndicator
 
 func _ready() -> void:
+    cmd_vel_indicator_.max_linear_velocity = max_linear_speed
+    cmd_vel_indicator_.max_angular_velocity = max_angular_speed
     add_child(tim_)
     tim_.wait_time = 1.0 / 60
     tim_.timeout.connect(_timer_callback)
