@@ -43,7 +43,10 @@ func _timer_callback() -> void:
 
         if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
             if reverse:
+                var in_safe_range := RobotInterface.arm_angle >= deg_to_rad(60.0)
                 RobotInterface.arm_angle -= deg_to_rad(60.0) * dt
+                if in_safe_range and RobotInterface.arm_angle < deg_to_rad(60.0):
+                    RobotInterface.arm_angle = deg_to_rad(60.0)
             else:
                 RobotInterface.arm_angle += deg_to_rad(60.0) * dt
             RobotInterface.set_arm_angle(clampf(RobotInterface.arm_angle, deg_to_rad(-60.0), deg_to_rad(120.0)))
@@ -51,11 +54,9 @@ func _timer_callback() -> void:
     var tmp_linear := Vector2.ZERO
     var tmp_angular := 0.0
     for device in CustomInput.allowed_device:
-#        print(Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT))
         var slow_mode := Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5
         var shulder := clampf((Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) - 0.5) * 2, 0, 1.0)
         var mul := 1.0 - shulder * 0.5
-        print(mul)
         tmp_linear.x += mul * -Input.get_joy_axis(device, JOY_AXIS_LEFT_Y)
         tmp_linear.y += mul * -Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
         tmp_linear.x += mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_UP) else 0.0
