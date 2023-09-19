@@ -1,8 +1,8 @@
 class_name RobotController
 extends Control
 
-@export var max_linear_speed := 3.0
-@export var max_angular_speed := 3.0
+@export var max_linear_speed := 2.6
+@export var max_angular_speed := 6.0
 
 var tim_ := Timer.new()
 
@@ -41,10 +41,10 @@ func _timer_callback() -> void:
 
         if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
             if reverse:
-                RobotInterface.arm_angle -= deg_to_rad(20.0) * dt
+                RobotInterface.arm_angle -= deg_to_rad(60.0) * dt
             else:
-                RobotInterface.arm_angle += deg_to_rad(20.0) * dt
-            RobotInterface.set_arm_angle(clampf(RobotInterface.arm_angle, -60.0, deg_to_rad(120.0)))
+                RobotInterface.arm_angle += deg_to_rad(60.0) * dt
+            RobotInterface.set_arm_angle(clampf(RobotInterface.arm_angle, deg_to_rad(-60.0), deg_to_rad(120.0)))
     
     var tmp_linear := Vector2.ZERO
     var tmp_angular := 0.0
