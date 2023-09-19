@@ -170,37 +170,6 @@ grow_vertical = 2
 size_flags_vertical = 3
 text = "下回収"
 
-[node name="SteerOffsetController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("13_vp31h")
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/SteerOffsetController"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="GridContainer" type="GridContainer" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/SteerOffsetController/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-columns = 2
-
-[node name="SteerWheel0" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/SteerOffsetController/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
-layout_mode = 2
-
-[node name="SteerWheel3" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/SteerOffsetController/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
-layout_mode = 2
-
-[node name="SteerWheel1" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/SteerOffsetController/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
-layout_mode = 2
-
-[node name="SteerWheel2" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/SteerOffsetController/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
-layout_mode = 2
-
 [node name="Panel" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -241,6 +210,49 @@ offset_bottom = 84.0
 grow_horizontal = 0
 script = ExtResource("14_xppwc")
 
+[node name="Offset" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("13_vp31h")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer/Offset"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/MainController/TabContainer/Offset/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+
+[node name="SteerWheel0" parent="MarginContainer/MainController/TabContainer/Offset/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
+layout_mode = 2
+
+[node name="SteerWheel3" parent="MarginContainer/MainController/TabContainer/Offset/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
+layout_mode = 2
+
+[node name="SteerWheel1" parent="MarginContainer/MainController/TabContainer/Offset/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
+layout_mode = 2
+
+[node name="SteerWheel2" parent="MarginContainer/MainController/TabContainer/Offset/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
+layout_mode = 2
+
+[node name="Drive" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="DriveGainController" parent="MarginContainer/MainController/TabContainer/Drive" instance=ExtResource("6_waxgt")]
+layout_mode = 1
+size_flags_vertical = 3
+display_name = "Drive"
+node_name = "/can_bridge"
+parameter_base = "drive"
+
 [node name="Steer" type="Panel" parent="MarginContainer/MainController/TabContainer"]
 visible = false
 layout_mode = 2
@@ -258,17 +270,6 @@ min_value = -1.0
 
 [node name="Max" parent="MarginContainer/MainController/TabContainer/Steer/SteerGainController" index="5"]
 max_value = 1.0
-
-[node name="Drive" type="Panel" parent="MarginContainer/MainController/TabContainer"]
-visible = false
-layout_mode = 2
-
-[node name="DriveGainController" parent="MarginContainer/MainController/TabContainer/Drive" instance=ExtResource("6_waxgt")]
-layout_mode = 1
-size_flags_vertical = 3
-display_name = "Drive"
-node_name = "/can_bridge"
-parameter_base = "drive"
 
 [node name="ArmAngle" type="Panel" parent="MarginContainer/MainController/TabContainer"]
 visible = false
