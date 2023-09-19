@@ -41,22 +41,35 @@ func _timer_callback() -> void:
 
         if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
             if reverse:
-                RobotInterface.arm_angle -= deg_to_rad(10.0) * dt
+                RobotInterface.arm_angle -= deg_to_rad(20.0) * dt
             else:
-                RobotInterface.arm_angle += deg_to_rad(10.0) * dt
-            RobotInterface.set_arm_angle(clampf(RobotInterface.arm_angle, 0.0, deg_to_rad(110.0)))
+                RobotInterface.arm_angle += deg_to_rad(20.0) * dt
+            RobotInterface.set_arm_angle(clampf(RobotInterface.arm_angle, -60.0, deg_to_rad(120.0)))
+    
+    var tmp_linear: Vector2
+    var tmp_angular := 0.0
+    for device in CustomInput.allowed_device:
+        var low_speed := Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5
+        var mul := 0.5 if low_speed else 1.0
+        tmp_linear.x += mul * -Input.get_joy_axis(device, JOY_AXIS_LEFT_Y)
+        tmp_linear.y += mul * -Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
+        tmp_linear.x += mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_UP) else 0.0
+        tmp_linear.x -= mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_DOWN) else 0.0
+        tmp_linear.y += mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_LEFT) else 0.0
+        tmp_linear.y -= mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_RIGHT) else 0.0
+        var ang := tmp_linear.angle()
+        var length = max(tmp_linear.length() - CustomInput.deadzone_radius, 0.0)
+        tmp_linear = Vector2(length, 0.0).rotated(ang)
+        tmp_angular += mul * -Input.get_joy_axis(device, JOY_AXIS_RIGHT_X)
+    RobotInterface.target_linear_velocity = tmp_linear * max_linear_speed
+    RobotInterface.target_angular_velocity = tmp_angular * max_angular_speed
 
 func _input(event: InputEvent) -> void:
-    var tgt_linear_vel := get_linear_vel() * max_linear_speed
-    var tgt_angular_vel := Input.get_axis("turn_right", "turn_left") * max_angular_speed
-    RobotInterface.target_linear_velocity = tgt_linear_vel
-    RobotInterface.target_angular_velocity = tgt_angular_vel
-
     var reverse := _is_reverse(event.device)
 
     if event is InputEventJoypadButton and event.pressed:
         if event.device not in CustomInput.allowed_device: return
-        print(event.button_index)
+#        print(event.button_index)
         match event.button_index:
             JOY_BUTTON_A:
                 RobotInterface.set_collector_cmd(not RobotInterface.collector_cmd)
@@ -91,13 +104,13 @@ func _expand_all() -> void:
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_expander_length(1.0)
     await get_tree().create_timer(1.0).timeout
-    RobotInterface.set_arm_angle(deg_to_rad(100))
+    RobotInterface.set_arm_angle(deg_to_rad(120))
     _working = false
 
 func _retract_all() -> void:
     if _working: return
     _working = true
-    RobotInterface.set_arm_angle(0)
+    RobotInterface.set_arm_angle(deg_to_rad(-60))
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_expander_length(0.0)
     await get_tree().create_timer(1.0).timeout
