@@ -322,11 +322,11 @@ min_value = -1.0
 [node name="Max" parent="MarginContainer/MainController/TabContainer/Expander/ExpanderGainController" index="5"]
 max_value = 1.0
 
-[node name="AccLimit" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+[node name="Limits" type="Panel" parent="MarginContainer/MainController/TabContainer"]
 visible = false
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MainController/TabContainer/AccLimit"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MainController/TabContainer/Limits"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -336,10 +336,10 @@ grow_vertical = 2
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_right = 50
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/AccLimit/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Limits/MarginContainer"]
 layout_mode = 2
 
-[node name="LinearAccel" parent="MarginContainer/MainController/TabContainer/AccLimit/MarginContainer/VBoxContainer" instance=ExtResource("4_ldxjf")]
+[node name="LinearAccel" parent="MarginContainer/MainController/TabContainer/Limits/MarginContainer/VBoxContainer" instance=ExtResource("4_ldxjf")]
 layout_mode = 2
 auto_init = true
 label_format = "Linear Accel  %7.2f [m/s^2]   "
@@ -347,7 +347,7 @@ node_name = "/can_bridge"
 parameter_name = "linear_accel_limit"
 max_value = 50.0
 
-[node name="AngularAccel" parent="MarginContainer/MainController/TabContainer/AccLimit/MarginContainer/VBoxContainer" instance=ExtResource("4_ldxjf")]
+[node name="AngularAccel" parent="MarginContainer/MainController/TabContainer/Limits/MarginContainer/VBoxContainer" instance=ExtResource("4_ldxjf")]
 layout_mode = 2
 auto_init = true
 label_format = "Angular Accel %7.2f [rad/s^2] "
@@ -355,11 +355,11 @@ node_name = "/can_bridge"
 parameter_name = "angular_accel_limit"
 max_value = 50.0
 
-[node name="Connection" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+[node name="Conn" type="Panel" parent="MarginContainer/MainController/TabContainer"]
 visible = false
 layout_mode = 2
 
-[node name="ConnectionIndicator" parent="MarginContainer/MainController/TabContainer/Connection" instance=ExtResource("5_2ccwf")]
+[node name="ConnectionIndicator" parent="MarginContainer/MainController/TabContainer/Conn" instance=ExtResource("5_2ccwf")]
 layout_mode = 1
 
 [node name="Log" type="Panel" parent="MarginContainer/MainController/TabContainer"]
