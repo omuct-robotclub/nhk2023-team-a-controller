@@ -17,7 +17,7 @@ theme_override_constants/margin_bottom = 100
 
 [node name="Slider" type="VSlider" parent="MarginContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(80, 1.45519e-11)
+custom_minimum_size = Vector2(100, 1.45519e-11)
 layout_mode = 2
 size_flags_horizontal = 4
 max_value = 500.0

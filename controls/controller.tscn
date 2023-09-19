@@ -125,6 +125,7 @@ preset_values = Array[float]([900.0, 700.0, 500.0, 0.0])
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Mech"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.7
 
 [node name="DonfanController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer"]
 layout_mode = 2
