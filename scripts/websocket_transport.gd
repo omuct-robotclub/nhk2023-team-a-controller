@@ -123,4 +123,4 @@ func _send_multicast():
     if _socket.set_dest_address(multicast_addr, send_port) != OK:
         push_error("set dest address failed")
     if _socket.put_packet(("robot_discovery_service:" + mcast_name).to_ascii_buffer()) != OK:
-        push_error("err")
+        push_error("put packet failed")

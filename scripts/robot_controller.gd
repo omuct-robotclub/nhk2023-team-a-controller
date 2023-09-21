@@ -3,6 +3,10 @@ extends Control
 
 @export var max_linear_speed := 2.6
 @export var max_angular_speed := 6.0
+@export var max_arm_pos_velocity := 0.3
+
+@export var deadzone_radius := 0.1
+@export var arm_base_length := 0.775
 
 var tim_ := Timer.new()
 
@@ -28,6 +32,25 @@ func _is_reverse(device: int) -> bool:
 
 var _prev_time := Time.get_ticks_msec()
 
+func _get_velocity_multiplier(device: int) -> float:
+    var shulder := clampf((Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) - 0.5) * 2, 0, 1.0)
+    return 1.0 - shulder * 0.666
+
+func _get_joy_stick(device: int, x_axis: int, y_axis: int) -> Vector2:
+    var v: Vector2
+    v.x = -Input.get_joy_axis(device, x_axis)
+    v.y = -Input.get_joy_axis(device, y_axis)
+    var length := maxf(v.length() - deadzone_radius, 0.0)
+    length /= 1 - deadzone_radius
+    var angle := v.angle()
+    return Vector2(length, 0.0).rotated(angle)
+
+func _is_safe_arm_pos(pos: Vector2) -> bool:
+    const eps := 0.0001
+    var angle := rad_to_deg(pos.angle())
+    var length := pos.length()
+    return (60 - eps) <= angle and angle <= (110 + eps) and (arm_base_length - eps) <= length and length <= (0.8 + arm_base_length + eps)
+
 func _timer_callback() -> void:
     var now := Time.get_ticks_msec()
     var dt := (now - _prev_time) * 1e-3
@@ -39,7 +62,7 @@ func _timer_callback() -> void:
                 RobotInterface.arm_length -= 0.25 * dt
             else:
                 RobotInterface.arm_length += 0.25 * dt
-            RobotInterface.set_arm_length(clampf(RobotInterface.arm_length, 0.0, 0.9))
+            RobotInterface.set_arm_length(clampf(RobotInterface.arm_length, 0.0, 0.8))
 
         if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
             if reverse:
@@ -49,29 +72,39 @@ func _timer_callback() -> void:
                     RobotInterface.arm_angle = deg_to_rad(60.0)
             else:
                 RobotInterface.arm_angle += deg_to_rad(60.0) * dt
-            RobotInterface.set_arm_angle(clampf(RobotInterface.arm_angle, deg_to_rad(-60.0), deg_to_rad(120.0)))
+            RobotInterface.set_arm_angle(clampf(RobotInterface.arm_angle, deg_to_rad(-60.0), deg_to_rad(110.0)))
     
-    var tmp_linear := Vector2.ZERO
-    var tmp_angular := 0.0
+    var linear := Vector2.ZERO
+    var angular := 0.0
+    var arm_vel := Vector2.ZERO
+    
     for device in CustomInput.allowed_device:
-        var slow_mode := Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5
-        var shulder := clampf((Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) - 0.5) * 2, 0, 1.0)
-        var mul := 1.0 - shulder * 0.666
-        tmp_linear.x += mul * -Input.get_joy_axis(device, JOY_AXIS_LEFT_Y)
-        tmp_linear.y += mul * -Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
-        tmp_linear.x += mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_UP) else 0.0
-        tmp_linear.x -= mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_DOWN) else 0.0
-        tmp_linear.y += mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_LEFT) else 0.0
-        tmp_linear.y -= mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_RIGHT) else 0.0
-        tmp_angular += mul * -Input.get_joy_axis(device, JOY_AXIS_RIGHT_X)
-    var length := maxf(tmp_linear.length() - CustomInput.deadzone_radius, 0.0)
-    length /= 1 - CustomInput.deadzone_radius
-    var ang := tmp_linear.angle()
-    tmp_linear = Vector2(length, 0.0).rotated(ang)
-    tmp_angular = signf(tmp_angular) * maxf(absf(tmp_angular) - CustomInput.deadzone_radius, 0.0)
-    tmp_angular /= 1 - CustomInput.deadzone_radius
-    RobotInterface.target_linear_velocity = tmp_linear * max_linear_speed
-    RobotInterface.target_angular_velocity = tmp_angular * max_angular_speed
+        var left_stick := _get_joy_stick(device, JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y)
+        var right_stick := _get_joy_stick(device, JOY_AXIS_RIGHT_X, JOY_AXIS_RIGHT_Y)
+        var mul := _get_velocity_multiplier(device)
+        linear.x += left_stick.y * mul
+        linear.y += left_stick.x * mul
+        if Input.is_joy_button_pressed(device, JOY_BUTTON_LEFT_SHOULDER):
+            arm_vel += right_stick * max_arm_pos_velocity
+        else:
+            angular += right_stick.x * mul
+    
+    for device in CustomInput.allowed_device:
+        var mul := _get_velocity_multiplier(device)
+        linear.x += mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_UP) else 0.0
+        linear.x -= mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_DOWN) else 0.0
+        linear.y += mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_LEFT) else 0.0
+        linear.y -= mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_RIGHT) else 0.0
+    
+    RobotInterface.target_linear_velocity = linear.limit_length(1) * max_linear_speed
+    RobotInterface.target_angular_velocity = clampf(angular, -1, 1) * max_angular_speed
+    
+    var arm_pos := Vector2.from_angle(RobotInterface.arm_angle) * (RobotInterface.arm_length + arm_base_length)
+    if arm_vel.length() > 0.001 and _is_safe_arm_pos(arm_pos):
+        var new_arm_pos := arm_pos + arm_vel * dt
+        if _is_safe_arm_pos(new_arm_pos):
+            RobotInterface.set_arm_angle(new_arm_pos.angle())
+            RobotInterface.set_arm_length(new_arm_pos.length() - arm_base_length)
 
 func _input(event: InputEvent) -> void:
     var reverse := _is_reverse(event.device)
@@ -113,7 +146,7 @@ func _expand_all() -> void:
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_expander_length(0.9)
     await get_tree().create_timer(1.0).timeout
-    RobotInterface.set_arm_angle(deg_to_rad(120))
+    RobotInterface.set_arm_angle(deg_to_rad(110))
     _working = false
 
 func _retract_all() -> void:
