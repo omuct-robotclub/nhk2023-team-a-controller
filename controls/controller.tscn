@@ -300,6 +300,9 @@ display_name = "ArmLength"
 node_name = "/can_bridge"
 parameter_base = "arm_length"
 
+[node name="Kp" parent="MarginContainer/MainController/TabContainer/ArmLength/ArmLengthGainController" index="1"]
+max_value = 50.0
+
 [node name="Min" parent="MarginContainer/MainController/TabContainer/ArmLength/ArmLengthGainController" index="4"]
 min_value = -1.0
 
