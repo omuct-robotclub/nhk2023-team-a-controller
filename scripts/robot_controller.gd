@@ -102,9 +102,8 @@ func _timer_callback() -> void:
     var arm_pos := Vector2.from_angle(RobotInterface.arm_angle) * (RobotInterface.arm_length + arm_base_length)
     if arm_vel.length() > 0.001 and _is_safe_arm_pos(arm_pos):
         var new_arm_pos := arm_pos + arm_vel * dt
-        if _is_safe_arm_pos(new_arm_pos):
-            RobotInterface.set_arm_angle(new_arm_pos.angle())
-            RobotInterface.set_arm_length(new_arm_pos.length() - arm_base_length)
+        RobotInterface.set_arm_angle(clampf(new_arm_pos.angle(), deg_to_rad(60), deg_to_rad(110)))
+        RobotInterface.set_arm_length(clampf(new_arm_pos.length() - arm_base_length, 0, 0.8))
 
 func _input(event: InputEvent) -> void:
     var reverse := _is_reverse(event.device)
