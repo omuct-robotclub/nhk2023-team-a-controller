@@ -111,7 +111,7 @@ func _expand_all() -> void:
     _working = true
     RobotInterface.set_donfan_cmd(1)
     await get_tree().create_timer(1.0).timeout
-    RobotInterface.set_expander_length(1.0)
+    RobotInterface.set_expander_length(0.9)
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_arm_angle(deg_to_rad(120))
     _working = false
