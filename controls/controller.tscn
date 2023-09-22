@@ -75,9 +75,9 @@ save_name = "arm_angle"
 value_format = "%5.0f [deg]"
 button_name_format = "%s (%0.0f [deg])"
 min_value = -60.0
-max_value = 120.0
+max_value = 110.0
 preset_names = Array[String](["展開", "水平", "格納"])
-preset_values = Array[float]([120.0, 1.45519e-11, -60.0])
+preset_values = Array[float]([110.0, 1.45519e-11, -60.0])
 
 [node name="ArmLengthController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech"]
 layout_mode = 2
