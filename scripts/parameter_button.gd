@@ -24,5 +24,5 @@ func init() -> void:
     _param.value_updated.connect(
         func(new_value: bool):
             self_modulate = Color.WHITE
-            button_pressed = new_value
+            set_pressed_no_signal(new_value)
     )

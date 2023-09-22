@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cgn8t07t2if4f"]
+[gd_scene load_steps=21 format=3 uid="uid://cgn8t07t2if4f"]
 
 [ext_resource type="Theme" uid="uid://baqy2s2jpay2" path="res://theme.tres" id="1_vm7p2"]
 [ext_resource type="Script" path="res://scripts/avoid_notch.gd" id="2_3tkds"]
@@ -15,8 +15,7 @@
 [ext_resource type="Script" path="res://scripts/donfan_controller.gd" id="11_74va8"]
 [ext_resource type="Script" path="res://scripts/collector_controller.gd" id="12_0dauf"]
 [ext_resource type="Script" path="res://scripts/base_frame_selector.gd" id="13_d5gog"]
-[ext_resource type="Script" path="res://scripts/steer_offset_indicator.gd" id="13_vp31h"]
-[ext_resource type="PackedScene" uid="uid://c5aa1tt1uxd0i" path="res://controls/steer_wheel.tscn" id="14_10mmx"]
+[ext_resource type="PackedScene" uid="uid://bchevd0lkkn66" path="res://controls/steer_controller.tscn" id="14_ljk4t"]
 [ext_resource type="Script" path="res://scripts/cmd_vel_publisher_enable_button.gd" id="14_xppwc"]
 [ext_resource type="PackedScene" uid="uid://d8u6tnxsamax" path="res://controls/target_vel_indicator.tscn" id="15_2luak"]
 [ext_resource type="Script" path="res://scripts/open_download_page_button.gd" id="18_ru0ij"]
@@ -216,32 +215,9 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("13_vp31h")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer/Offset"]
+[node name="SteerController" parent="MarginContainer/MainController/TabContainer/Offset" instance=ExtResource("14_ljk4t")]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="GridContainer" type="GridContainer" parent="MarginContainer/MainController/TabContainer/Offset/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-columns = 2
-
-[node name="SteerWheel0" parent="MarginContainer/MainController/TabContainer/Offset/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
-layout_mode = 2
-
-[node name="SteerWheel3" parent="MarginContainer/MainController/TabContainer/Offset/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
-layout_mode = 2
-
-[node name="SteerWheel1" parent="MarginContainer/MainController/TabContainer/Offset/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
-layout_mode = 2
-
-[node name="SteerWheel2" parent="MarginContainer/MainController/TabContainer/Offset/HBoxContainer/GridContainer" instance=ExtResource("14_10mmx")]
-layout_mode = 2
 
 [node name="Drive" type="Panel" parent="MarginContainer/MainController/TabContainer"]
 visible = false

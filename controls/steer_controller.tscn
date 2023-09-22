@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=3 uid="uid://bchevd0lkkn66"]
+
+[ext_resource type="PackedScene" uid="uid://cfmqnwhuh0tbu" path="res://controls/steer_unit_controller.tscn" id="1_m67cu"]
+
+[node name="HBoxContainer" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+
+[node name="Steer0" parent="GridContainer" instance=ExtResource("1_m67cu")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+left_side = true
+
+[node name="Steer3" parent="GridContainer" instance=ExtResource("1_m67cu")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+index = 3
+
+[node name="Steer1" parent="GridContainer" instance=ExtResource("1_m67cu")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+index = 1
+left_side = true
+
+[node name="Steer2" parent="GridContainer" instance=ExtResource("1_m67cu")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+index = 2

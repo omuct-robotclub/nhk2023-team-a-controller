@@ -1,5 +1,6 @@
 extends Node
 
+signal steer_state_changed()
 signal cmd_vel_frame_changed()
 signal cmd_vel_publisher_enabled_changed()
 signal donfan_cmd_changed()
@@ -27,6 +28,10 @@ var _publish_command_timer := Timer.new()
 @onready var _cmd_vel_filtered_sub := rosbridge.create_subscription("geometry_msgs/Twist", "cmd_vel_filtered", _cmd_vel_filtered_callback)
 var _filtered_linear_vel := Vector2()
 var _filtered_angular_vel := 0.0
+@onready var _steer_state_sub := rosbridge.create_subscription("robot_interface/SteerUnitStates", "steer_states", _steer_states_callback)
+var steer_angles: Array = [0.0, 0.0, 0.0, 0.0]
+var steer_velocities: Array = [0.0, 0.0, 0.0, 0.0]
+var steer_currents: Array = [0.0, 0.0, 0.0, 0.0]
 
 var _unwind_cli := rosbridge.create_client("unwind")
 var _donfan_cmd_pub := rosbridge.create_publisher("std_msgs/Int8", "donfan_cmd")
@@ -46,6 +51,12 @@ func _cmd_vel_filtered_callback(msg: Dictionary) -> void:
     _filtered_linear_vel.x = msg.linear.x
     _filtered_linear_vel.y = msg.linear.y
     _filtered_angular_vel = msg.angular.z
+
+func _steer_states_callback(msg: Dictionary) -> void:
+    steer_angles = msg.angles
+    steer_currents = msg.currents
+    steer_velocities = msg.velocities
+    steer_state_changed.emit()
 
 func _publish_command() -> void:
     if cmd_vel_publisher_enabled:
