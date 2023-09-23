@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cgn8t07t2if4f"]
+[gd_scene load_steps=22 format=3 uid="uid://cgn8t07t2if4f"]
 
 [ext_resource type="Theme" uid="uid://baqy2s2jpay2" path="res://theme.tres" id="1_vm7p2"]
 [ext_resource type="Script" path="res://scripts/avoid_notch.gd" id="2_3tkds"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://scripts/arm_angle_controller.gd" id="7_8lga2"]
 [ext_resource type="PackedScene" uid="uid://do7v7wvbjylin" path="res://controls/slider_with_preset_buttons.tscn" id="8_36cg0"]
 [ext_resource type="Script" path="res://scripts/arm_length_controller.gd" id="9_02u3r"]
+[ext_resource type="Script" path="res://scripts/large_wheel_controller.gd" id="10_p6ao5"]
 [ext_resource type="Script" path="res://scripts/expander_controller.gd" id="10_yswmu"]
 [ext_resource type="Script" path="res://scripts/donfan_controller.gd" id="11_74va8"]
 [ext_resource type="Script" path="res://scripts/collector_controller.gd" id="12_0dauf"]
@@ -154,13 +155,18 @@ layout_mode = 2
 size_flags_vertical = 3
 text = "格納"
 
-[node name="CollectorController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CollectorController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
 script = ExtResource("12_0dauf")
 
-[node name="CheckButton" type="CheckButton" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/CollectorController"]
+[node name="CheckButton" type="CheckButton" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/HBoxContainer/CollectorController"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -169,6 +175,23 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
 text = "下回収"
+
+[node name="LargeWheelController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+script = ExtResource("10_p6ao5")
+
+[node name="CheckButton" type="CheckButton" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/HBoxContainer/LargeWheelController"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+text = "大径"
 
 [node name="Panel" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer"]
 layout_mode = 2
