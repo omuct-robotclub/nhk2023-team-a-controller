@@ -5,7 +5,7 @@ extends Control
 @export var max_angular_speed := 6.0
 @export var max_arm_pos_velocity := 0.3
 
-@export var deadzone_radius := 0.1
+@export var deadzone_radius := 0.2
 @export var arm_base_length := 0.775
 
 var tim_ := Timer.new()
