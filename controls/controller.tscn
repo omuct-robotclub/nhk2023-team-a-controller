@@ -263,6 +263,11 @@ auto_init = true
 node_name = "/can_bridge"
 parameter_name = "lock_arm_angle"
 
+[node name="ArmVirticalButton" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/ArmControlButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "垂直"
+
 [node name="ArmHolizontalButton" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/ArmControlButtons"]
 layout_mode = 2
 size_flags_vertical = 3

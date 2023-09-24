@@ -173,7 +173,7 @@ func _expand_all() -> void:
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_expander_length(0.9)
     await get_tree().create_timer(1.0).timeout
-    RobotInterface.set_arm_angle(deg_to_rad(110))
+    RobotInterface.set_arm_angle(deg_to_rad(90))
     _working = false
 
 func _retract_all() -> void:
