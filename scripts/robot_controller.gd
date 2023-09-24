@@ -45,9 +45,10 @@ func _is_slow_mode(device: int) -> bool:
     return 0.8 < a
 
 func _get_joy_stick(device: int, x_axis: int, y_axis: int) -> Vector2:
-    var v: Vector2
-    v.x = -Input.get_joy_axis(device, x_axis)
-    v.y = -Input.get_joy_axis(device, y_axis)
+    var v := Vector2(
+        -Input.get_joy_axis(device, x_axis),
+        -Input.get_joy_axis(device, y_axis),
+    )
     var length := maxf(v.length() - deadzone_radius, 0.0)
     length /= 1 - deadzone_radius
     var angle := v.angle()

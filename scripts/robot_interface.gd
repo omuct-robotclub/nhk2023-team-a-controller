@@ -36,6 +36,7 @@ var _publish_command_timer := Timer.new()
 @onready var _cmd_vel_filtered_sub := rosbridge.create_subscription("geometry_msgs/Twist", "cmd_vel_filtered", _cmd_vel_filtered_callback)
 var _actual_linear_vel := Vector2()
 var _actual_angular_vel := 0.0
+@warning_ignore("unused_private_class_variable")
 @onready var _steer_state_sub := rosbridge.create_subscription("robot_interface/SteerUnitStates", "steer_states", _steer_states_callback)
 var steer_angles: Array = [0.0, 0.0, 0.0, 0.0]
 var steer_velocities: Array = [0.0, 0.0, 0.0, 0.0]
