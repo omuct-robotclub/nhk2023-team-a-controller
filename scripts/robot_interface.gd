@@ -65,7 +65,7 @@ func _process(delta: float) -> void:
     
     var angular_diff := target_angular_velocity - filtered_angular_velocity
     var angular_max_delta := angular_accel_limit * delta
-    if absf(angular_diff) <= linear_accel_limit:
+    if absf(angular_diff) <= angular_max_delta:
         filtered_angular_velocity = target_angular_velocity
     else:
         filtered_angular_velocity += clampf(angular_diff, -angular_max_delta, angular_max_delta)

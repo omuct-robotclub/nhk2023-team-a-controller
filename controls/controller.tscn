@@ -435,7 +435,7 @@ display_name = "Linear Acceleration"
 save_name = "linear_acc"
 value_format = "%7.3f [m/s^2]"
 button_name_format = "%s   (%7.3f [m/s^2])"
-max_value = 15.0
+max_value = 30.0
 preset_names = Array[String](["普通", "低速"])
 preset_values = Array[float]([3.0, 1.0])
 
