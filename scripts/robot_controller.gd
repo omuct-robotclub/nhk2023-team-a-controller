@@ -86,20 +86,24 @@ func _timer_callback() -> void:
     
     var linear := Vector2.ZERO
     var angular := 0.0
-    var arm_vel := Vector2.ZERO
+#    var arm_vel := Vector2.ZERO
     
     var slow_mode := false
     for device in CustomInput.allowed_device:
+        var mirror_mode := Input.is_joy_button_pressed(device, JOY_BUTTON_LEFT_SHOULDER)
         slow_mode = slow_mode || _is_slow_mode(device)
         var left_stick := _get_joy_stick(device, JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y)
         var right_stick := _get_joy_stick(device, JOY_AXIS_RIGHT_X, JOY_AXIS_RIGHT_Y)
         var mul := _get_velocity_multiplier(device)
+        if mirror_mode:
+            left_stick = -left_stick
         linear.x += left_stick.y * mul
         linear.y += left_stick.x * mul
-        if Input.is_joy_button_pressed(device, JOY_BUTTON_LEFT_SHOULDER):
-            arm_vel += right_stick * max_arm_pos_velocity
-        else:
-            angular += right_stick.x * mul
+        angular += right_stick.x * mul
+        print(right_stick)
+#        if Input.is_joy_button_pressed(device, JOY_BUTTON_LEFT_SHOULDER):
+#            arm_vel += right_stick * max_arm_pos_velocity
+#        else:
     
     if slow_mode and (not _is_prev_slow_mode):
         linear_acc_limit.buttons.get_child(1).normal_pressed.emit()
@@ -119,11 +123,11 @@ func _timer_callback() -> void:
     RobotInterface.target_linear_velocity = linear.limit_length(1) * max_linear_speed
     RobotInterface.target_angular_velocity = clampf(angular, -1, 1) * max_angular_speed
     
-    var arm_pos := Vector2.from_angle(RobotInterface.arm_angle) * (RobotInterface.arm_length + arm_base_length)
-    if arm_vel.length() > 0.001 and _is_safe_arm_pos(arm_pos):
-        var new_arm_pos := arm_pos + arm_vel * dt
-        RobotInterface.set_arm_angle(clampf(new_arm_pos.angle(), deg_to_rad(60), deg_to_rad(110)))
-        RobotInterface.set_arm_length(clampf(new_arm_pos.length() - arm_base_length, 0, 0.8))
+#    var arm_pos := Vector2.from_angle(RobotInterface.arm_angle) * (RobotInterface.arm_length + arm_base_length)
+#    if arm_vel.length() > 0.001 and _is_safe_arm_pos(arm_pos):
+#        var new_arm_pos := arm_pos + arm_vel * dt
+#        RobotInterface.set_arm_angle(clampf(new_arm_pos.angle(), deg_to_rad(60), deg_to_rad(110)))
+#        RobotInterface.set_arm_length(clampf(new_arm_pos.length() - arm_base_length, 0, 0.8))
 
 func _input(event: InputEvent) -> void:
     var reverse := _is_reverse(event.device)
