@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cgn8t07t2if4f"]
+[gd_scene load_steps=24 format=3 uid="uid://cgn8t07t2if4f"]
 
 [ext_resource type="Theme" uid="uid://baqy2s2jpay2" path="res://theme.tres" id="1_vm7p2"]
 [ext_resource type="Script" path="res://scripts/avoid_notch.gd" id="2_3tkds"]
@@ -6,7 +6,9 @@
 [ext_resource type="Script" path="res://scripts/reset_presets_button.gd" id="4_0p5sv"]
 [ext_resource type="PackedScene" uid="uid://d3nuevgxuea1c" path="res://controls/parameter_slider.tscn" id="4_ldxjf"]
 [ext_resource type="PackedScene" uid="uid://muuiqpin0e6h" path="res://controls/rosout_viewer.tscn" id="4_vqv0p"]
+[ext_resource type="Script" path="res://scripts/support_controller.gd" id="4_yedj2"]
 [ext_resource type="PackedScene" uid="uid://d3u0tvvu78rlr" path="res://controls/connection_indicator.tscn" id="5_2ccwf"]
+[ext_resource type="PackedScene" uid="uid://d0ej8q12otx8p" path="res://controls/parameter_button.tscn" id="5_os7o2"]
 [ext_resource type="PackedScene" uid="uid://cc4ksg2t1kxax" path="res://controls/pid_gain_controller.tscn" id="6_waxgt"]
 [ext_resource type="Script" path="res://scripts/arm_angle_controller.gd" id="7_8lga2"]
 [ext_resource type="PackedScene" uid="uid://do7v7wvbjylin" path="res://controls/slider_with_preset_buttons.tscn" id="8_36cg0"]
@@ -28,6 +30,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_vertical_guides_ = [-1054.0]
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -50,10 +53,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_font_sizes/font_size = 54
 tab_alignment = 1
 
 [node name="Mech" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -233,6 +236,82 @@ offset_bottom = 84.0
 grow_horizontal = 0
 script = ExtResource("14_xppwc")
 
+[node name="Support" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+layout_mode = 2
+script = ExtResource("4_yedj2")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer/Support"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ArmControlButtons" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/ArmControlButtons"]
+layout_mode = 2
+text = "角度調整"
+
+[node name="ArmLockButton" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/ArmControlButtons" instance=ExtResource("5_os7o2")]
+layout_mode = 2
+size_flags_vertical = 3
+text = "ロック"
+
+[node name="ArmHolizontalButton" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/ArmControlButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "水平"
+
+[node name="ArmRetractButton" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/ArmControlButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "格納"
+
+[node name="DonfanControlButtons" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/DonfanControlButtons"]
+layout_mode = 2
+text = "ドンファン"
+
+[node name="DonfanExpandButton" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/DonfanControlButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "展開"
+
+[node name="DonfanRetractButton" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/DonfanControlButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "格納"
+
+[node name="GetOverControlButtons" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/GetOverControlButtons"]
+layout_mode = 2
+text = "段越え"
+
+[node name="PreGetOverButton" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/GetOverControlButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "段越え前"
+
+[node name="PostGetOverButton" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/GetOverControlButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "段越え後（ランゾーン）"
+
+[node name="PostGetOverButtonCenter" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/GetOverControlButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "段越え後（センター）"
+
 [node name="Offset" type="Panel" parent="MarginContainer/MainController/TabContainer"]
 visible = false
 layout_mode = 2
@@ -242,87 +321,90 @@ size_flags_vertical = 3
 [node name="SteerController" parent="MarginContainer/MainController/TabContainer/Offset" instance=ExtResource("14_ljk4t")]
 layout_mode = 1
 
-[node name="Drive" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+[node name="PIDGains" type="TabContainer" parent="MarginContainer/MainController/TabContainer"]
 visible = false
 layout_mode = 2
 
-[node name="DriveGainController" parent="MarginContainer/MainController/TabContainer/Drive" instance=ExtResource("6_waxgt")]
-layout_mode = 1
-size_flags_vertical = 3
-display_name = "Drive"
-node_name = "/can_bridge"
-parameter_base = "drive"
-
-[node name="Steer" type="Panel" parent="MarginContainer/MainController/TabContainer"]
-visible = false
+[node name="Steer" type="Panel" parent="MarginContainer/MainController/TabContainer/PIDGains"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SteerGainController" parent="MarginContainer/MainController/TabContainer/Steer" instance=ExtResource("6_waxgt")]
+[node name="SteerGainController" parent="MarginContainer/MainController/TabContainer/PIDGains/Steer" instance=ExtResource("6_waxgt")]
 layout_mode = 1
 size_flags_vertical = 3
 display_name = "Steer"
 node_name = "/can_bridge"
 parameter_base = "steer"
 
-[node name="Min" parent="MarginContainer/MainController/TabContainer/Steer/SteerGainController" index="4"]
+[node name="Min" parent="MarginContainer/MainController/TabContainer/PIDGains/Steer/SteerGainController" index="4"]
 min_value = -1.0
 
-[node name="Max" parent="MarginContainer/MainController/TabContainer/Steer/SteerGainController" index="5"]
+[node name="Max" parent="MarginContainer/MainController/TabContainer/PIDGains/Steer/SteerGainController" index="5"]
 max_value = 1.0
 
-[node name="ArmAngle" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+[node name="Drive" type="Panel" parent="MarginContainer/MainController/TabContainer/PIDGains"]
 visible = false
 layout_mode = 2
 
-[node name="ArmAngleGainController" parent="MarginContainer/MainController/TabContainer/ArmAngle" instance=ExtResource("6_waxgt")]
+[node name="DriveGainController" parent="MarginContainer/MainController/TabContainer/PIDGains/Drive" instance=ExtResource("6_waxgt")]
+layout_mode = 1
+size_flags_vertical = 3
+display_name = "Drive"
+node_name = "/can_bridge"
+parameter_base = "drive"
+
+[node name="ArmAngle" type="Panel" parent="MarginContainer/MainController/TabContainer/PIDGains"]
+visible = false
+layout_mode = 2
+
+[node name="ArmAngleGainController" parent="MarginContainer/MainController/TabContainer/PIDGains/ArmAngle" instance=ExtResource("6_waxgt")]
 layout_mode = 1
 size_flags_vertical = 3
 display_name = "ArmAngle"
 node_name = "/can_bridge"
 parameter_base = "arm_angle"
 
-[node name="Min" parent="MarginContainer/MainController/TabContainer/ArmAngle/ArmAngleGainController" index="4"]
+[node name="Min" parent="MarginContainer/MainController/TabContainer/PIDGains/ArmAngle/ArmAngleGainController" index="4"]
 min_value = -1.0
 
-[node name="Max" parent="MarginContainer/MainController/TabContainer/ArmAngle/ArmAngleGainController" index="5"]
+[node name="Max" parent="MarginContainer/MainController/TabContainer/PIDGains/ArmAngle/ArmAngleGainController" index="5"]
 max_value = 1.0
 
-[node name="ArmLength" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+[node name="ArmLength" type="Panel" parent="MarginContainer/MainController/TabContainer/PIDGains"]
 visible = false
 layout_mode = 2
 
-[node name="ArmLengthGainController" parent="MarginContainer/MainController/TabContainer/ArmLength" instance=ExtResource("6_waxgt")]
+[node name="ArmLengthGainController" parent="MarginContainer/MainController/TabContainer/PIDGains/ArmLength" instance=ExtResource("6_waxgt")]
 layout_mode = 1
 size_flags_vertical = 3
 display_name = "ArmLength"
 node_name = "/can_bridge"
 parameter_base = "arm_length"
 
-[node name="Kp" parent="MarginContainer/MainController/TabContainer/ArmLength/ArmLengthGainController" index="1"]
+[node name="Kp" parent="MarginContainer/MainController/TabContainer/PIDGains/ArmLength/ArmLengthGainController" index="1"]
 max_value = 50.0
 
-[node name="Min" parent="MarginContainer/MainController/TabContainer/ArmLength/ArmLengthGainController" index="4"]
+[node name="Min" parent="MarginContainer/MainController/TabContainer/PIDGains/ArmLength/ArmLengthGainController" index="4"]
 min_value = -1.0
 
-[node name="Max" parent="MarginContainer/MainController/TabContainer/ArmLength/ArmLengthGainController" index="5"]
+[node name="Max" parent="MarginContainer/MainController/TabContainer/PIDGains/ArmLength/ArmLengthGainController" index="5"]
 max_value = 1.0
 
-[node name="Expander" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+[node name="Expander" type="Panel" parent="MarginContainer/MainController/TabContainer/PIDGains"]
 visible = false
 layout_mode = 2
 
-[node name="ExpanderGainController" parent="MarginContainer/MainController/TabContainer/Expander" instance=ExtResource("6_waxgt")]
+[node name="ExpanderGainController" parent="MarginContainer/MainController/TabContainer/PIDGains/Expander" instance=ExtResource("6_waxgt")]
 layout_mode = 1
 size_flags_vertical = 3
 display_name = "Expander"
 node_name = "/can_bridge"
 parameter_base = "expander"
 
-[node name="Min" parent="MarginContainer/MainController/TabContainer/Expander/ExpanderGainController" index="4"]
+[node name="Min" parent="MarginContainer/MainController/TabContainer/PIDGains/Expander/ExpanderGainController" index="4"]
 min_value = -1.0
 
-[node name="Max" parent="MarginContainer/MainController/TabContainer/Expander/ExpanderGainController" index="5"]
+[node name="Max" parent="MarginContainer/MainController/TabContainer/PIDGains/Expander/ExpanderGainController" index="5"]
 max_value = 1.0
 
 [node name="Limits" type="Panel" parent="MarginContainer/MainController/TabContainer"]
@@ -401,7 +483,7 @@ layout_mode = 2
 horizontal_alignment = 2
 script = ExtResource("19_57jgw")
 
-[editable path="MarginContainer/MainController/TabContainer/Steer/SteerGainController"]
-[editable path="MarginContainer/MainController/TabContainer/ArmAngle/ArmAngleGainController"]
-[editable path="MarginContainer/MainController/TabContainer/ArmLength/ArmLengthGainController"]
-[editable path="MarginContainer/MainController/TabContainer/Expander/ExpanderGainController"]
+[editable path="MarginContainer/MainController/TabContainer/PIDGains/Steer/SteerGainController"]
+[editable path="MarginContainer/MainController/TabContainer/PIDGains/ArmAngle/ArmAngleGainController"]
+[editable path="MarginContainer/MainController/TabContainer/PIDGains/ArmLength/ArmLengthGainController"]
+[editable path="MarginContainer/MainController/TabContainer/PIDGains/Expander/ExpanderGainController"]

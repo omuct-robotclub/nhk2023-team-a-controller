@@ -5,3 +5,5 @@
 [resource]
 default_font = ExtResource("1_dcrwc")
 default_font_size = 30
+TabContainer/font_sizes/font_size = 60
+TabContainer/fonts/font = ExtResource("1_dcrwc")

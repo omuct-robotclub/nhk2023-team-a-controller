@@ -14,6 +14,7 @@ var collecting_ := false
 var all_expanding_ := false
 
 @onready var cmd_vel_indicator_ = %CmdVelIndicator
+@onready var arm_length_slider: HBoxContainer = $TabContainer/Mech/ArmLengthController/Slider
 
 func _ready() -> void:
     cmd_vel_indicator_.max_linear_velocity = max_linear_speed
@@ -56,23 +57,24 @@ func _timer_callback() -> void:
     var dt := (now - _prev_time) * 1e-3
     _prev_time = now
     for device in CustomInput.allowed_device:
-        var reverse := _is_reverse(device)
-        if Input.is_joy_button_pressed(device, JOY_BUTTON_X):
-            if reverse:
-                RobotInterface.arm_length -= 0.25 * dt
-            else:
-                RobotInterface.arm_length += 0.25 * dt
-            RobotInterface.set_arm_length(clampf(RobotInterface.arm_length, 0.0, 0.8))
+        if not Input.is_joy_button_pressed(device, JOY_BUTTON_RIGHT_SHOULDER):
+            var reverse := _is_reverse(device)
+            if Input.is_joy_button_pressed(device, JOY_BUTTON_X):
+                if reverse:
+                    RobotInterface.arm_length -= 0.25 * dt
+                else:
+                    RobotInterface.arm_length += 0.25 * dt
+                RobotInterface.set_arm_length(clampf(RobotInterface.arm_length, 0.0, 0.8))
 
-        if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
-            if reverse:
-                var in_safe_range := RobotInterface.arm_angle >= deg_to_rad(60.0)
-                RobotInterface.arm_angle -= deg_to_rad(60.0) * dt
-                if in_safe_range and RobotInterface.arm_angle < deg_to_rad(60.0):
-                    RobotInterface.arm_angle = deg_to_rad(60.0)
-            else:
-                RobotInterface.arm_angle += deg_to_rad(60.0) * dt
-            RobotInterface.set_arm_angle(clampf(RobotInterface.arm_angle, deg_to_rad(-60.0), deg_to_rad(110.0)))
+            if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
+                if reverse:
+                    var in_safe_range := RobotInterface.arm_angle >= deg_to_rad(60.0)
+                    RobotInterface.arm_angle -= deg_to_rad(60.0) * dt
+                    if in_safe_range and RobotInterface.arm_angle < deg_to_rad(60.0):
+                        RobotInterface.arm_angle = deg_to_rad(60.0)
+                else:
+                    RobotInterface.arm_angle += deg_to_rad(60.0) * dt
+                RobotInterface.set_arm_angle(clampf(RobotInterface.arm_angle, deg_to_rad(-60.0), deg_to_rad(110.0)))
     
     var linear := Vector2.ZERO
     var angular := 0.0
@@ -110,31 +112,39 @@ func _input(event: InputEvent) -> void:
 
     if event is InputEventJoypadButton and event.pressed:
         if event.device not in CustomInput.allowed_device: return
-#        print(event.button_index)
-        match event.button_index:
-            JOY_BUTTON_A:
+        match [event.button_index, Input.is_joy_button_pressed(event.device, JOY_BUTTON_RIGHT_SHOULDER)]:
+            [JOY_BUTTON_RIGHT_STICK, _]:
+                if RobotInterface.large_wheel_cmd == 0:
+                    RobotInterface.set_large_wheel_cmd(0.6)
+                else:
+                    RobotInterface.set_large_wheel_cmd(0.0)
+
+            [JOY_BUTTON_MISC1, _]:
+                if RobotInterface.large_wheel_cmd == 0:
+                    RobotInterface.set_large_wheel_cmd(0.6)
+                else:
+                    RobotInterface.set_large_wheel_cmd(0.0)
+
+            [JOY_BUTTON_LEFT_STICK, _]:
+                RobotInterface.start_unwinding()
+            
+            [JOY_BUTTON_A, false]:
                 RobotInterface.set_collector_cmd(not RobotInterface.collector_cmd)
 
-            JOY_BUTTON_RIGHT_STICK:
-                if RobotInterface.large_wheel_cmd == 0:
-                    RobotInterface.set_large_wheel_cmd(0.6)
-                else:
-                    RobotInterface.set_large_wheel_cmd(0.0)
-
-            JOY_BUTTON_MISC1:
-                if RobotInterface.large_wheel_cmd == 0:
-                    RobotInterface.set_large_wheel_cmd(0.6)
-                else:
-                    RobotInterface.set_large_wheel_cmd(0.0)
-
-            JOY_BUTTON_LEFT_STICK:
-                RobotInterface.start_unwinding()
-
-            JOY_BUTTON_Y:
+            [JOY_BUTTON_Y, false]:
                 if reverse:
                     _retract_all()
                 else:
                     _expand_all()
+            
+            [JOY_BUTTON_Y, true]:
+                arm_length_slider.buttons.get_child(0).normal_pressed.emit()
+                
+            [JOY_BUTTON_B, true]:
+                arm_length_slider.buttons.get_child(1).normal_pressed.emit()
+            
+            [JOY_BUTTON_A, true]:
+                arm_length_slider.buttons.get_child(2).normal_pressed.emit()
 
 var _working := false
 
