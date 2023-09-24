@@ -9,6 +9,8 @@ signal collector_cmd_changed()
 signal arm_length_changed()
 signal arm_angle_changed()
 signal large_wheel_cmd_changed()
+signal linear_accel_limit_changed()
+signal angular_accel_limit_changed()
 
 var cmd_vel_publisher_enabled := true
 var cmd_vel_frame := "base_footprint"
@@ -19,15 +21,21 @@ var arm_angle: float
 var arm_length: float
 var large_wheel_cmd: float
 
+var linear_accel_limit := 10.0
+var angular_accel_limit := 10.0
+
 var target_linear_velocity := Vector2()
 var target_angular_velocity := 0.0
+
+var filtered_linear_velocity := Vector2()
+var filtered_angular_velocity := 0.0
 
 var _publish_command_timer := Timer.new()
 @onready var _cmd_vel_stamped_pub := rosbridge.create_publisher("geometry_msgs/TwistStamped", "cmd_vel_stamped")
 @warning_ignore("unused_private_class_variable")
 @onready var _cmd_vel_filtered_sub := rosbridge.create_subscription("geometry_msgs/Twist", "cmd_vel_filtered", _cmd_vel_filtered_callback)
-var _filtered_linear_vel := Vector2()
-var _filtered_angular_vel := 0.0
+var _actual_linear_vel := Vector2()
+var _actual_angular_vel := 0.0
 @onready var _steer_state_sub := rosbridge.create_subscription("robot_interface/SteerUnitStates", "steer_states", _steer_states_callback)
 var steer_angles: Array = [0.0, 0.0, 0.0, 0.0]
 var steer_velocities: Array = [0.0, 0.0, 0.0, 0.0]
@@ -47,10 +55,26 @@ func init() -> void:
     add_child(_publish_command_timer)
     _publish_command_timer.start()
 
+func _process(delta: float) -> void:
+    var linear_diff := target_linear_velocity - filtered_linear_velocity
+    var linear_max_delta := linear_accel_limit * delta
+    if linear_diff.length() <= linear_max_delta:
+        filtered_linear_velocity = target_linear_velocity
+    else:
+        filtered_linear_velocity += linear_diff.limit_length(linear_max_delta)
+    
+    var angular_diff := target_angular_velocity - filtered_angular_velocity
+    var angular_max_delta := angular_accel_limit * delta
+    if absf(angular_diff) <= linear_accel_limit:
+        filtered_angular_velocity = target_angular_velocity
+    else:
+        filtered_angular_velocity += clampf(angular_diff, -angular_max_delta, angular_max_delta)
+#    print(target_linear_velocity, filtered_linear_velocity)
+
 func _cmd_vel_filtered_callback(msg: Dictionary) -> void:
-    _filtered_linear_vel.x = msg.linear.x
-    _filtered_linear_vel.y = msg.linear.y
-    _filtered_angular_vel = msg.angular.z
+    _actual_linear_vel.x = msg.linear.x
+    _actual_linear_vel.y = msg.linear.y
+    _actual_angular_vel = msg.angular.z
 
 func _steer_states_callback(msg: Dictionary) -> void:
     steer_angles = msg.angles
@@ -66,17 +90,17 @@ func _publish_command() -> void:
             },
             "twist": {
                 "linear": {
-                    "x": target_linear_velocity.x,
-                    "y": target_linear_velocity.y
+                    "x": filtered_linear_velocity.x,
+                    "y": filtered_linear_velocity.y
                 },
                 "angular": {
-                    "z": target_angular_velocity
+                    "z": filtered_angular_velocity
                 }
             }
         })
 
-func get_filtered_target_linear_velocity() -> Vector2: return _filtered_linear_vel
-func get_filtered_target_angular_velocity() -> float: return _filtered_angular_vel
+func get_filtered_target_linear_velocity() -> Vector2: return _actual_linear_vel
+func get_filtered_target_angular_velocity() -> float: return _actual_angular_vel
 
 func start_unwinding() -> void:
     _unwind_cli.call_service({})
@@ -118,3 +142,11 @@ func set_large_wheel_cmd(cmd: float) -> void:
     large_wheel_cmd = cmd
     _large_wheel_cmd_pub.publish({"data": cmd})
     large_wheel_cmd_changed.emit()
+
+func set_linear_accel_limit(limit: float) -> void:
+    linear_accel_limit = limit
+    linear_accel_limit_changed.emit()
+
+func set_angular_accel_limit(limit: float) -> void:
+    angular_accel_limit = limit
+    angular_accel_limit_changed.emit()

@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://scripts/avoid_notch.gd" id="2_3tkds"]
 [ext_resource type="Script" path="res://scripts/robot_controller.gd" id="3_oi048"]
 [ext_resource type="Script" path="res://scripts/reset_presets_button.gd" id="4_0p5sv"]
-[ext_resource type="PackedScene" uid="uid://d3nuevgxuea1c" path="res://controls/parameter_slider.tscn" id="4_ldxjf"]
+[ext_resource type="Script" path="res://scripts/acc_limit_controller.gd" id="4_lqmxo"]
 [ext_resource type="PackedScene" uid="uid://muuiqpin0e6h" path="res://controls/rosout_viewer.tscn" id="4_vqv0p"]
 [ext_resource type="Script" path="res://scripts/support_controller.gd" id="4_yedj2"]
 [ext_resource type="PackedScene" uid="uid://d3u0tvvu78rlr" path="res://controls/connection_indicator.tscn" id="5_2ccwf"]
@@ -237,6 +237,7 @@ grow_horizontal = 0
 script = ExtResource("14_xppwc")
 
 [node name="Support" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
 layout_mode = 2
 script = ExtResource("4_yedj2")
 
@@ -408,8 +409,8 @@ min_value = -1.0
 max_value = 1.0
 
 [node name="Limits" type="Panel" parent="MarginContainer/MainController/TabContainer"]
-visible = false
 layout_mode = 2
+script = ExtResource("4_lqmxo")
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MainController/TabContainer/Limits"]
 layout_mode = 1
@@ -421,37 +422,43 @@ grow_vertical = 2
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_right = 50
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Limits/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer/Limits/MarginContainer"]
 layout_mode = 2
 
-[node name="LinearAccel" parent="MarginContainer/MainController/TabContainer/Limits/MarginContainer/VBoxContainer" instance=ExtResource("4_ldxjf")]
+[node name="LinearAccLimit" parent="MarginContainer/MainController/TabContainer/Limits/MarginContainer/HBoxContainer" instance=ExtResource("8_36cg0")]
 layout_mode = 2
-auto_init = true
-label_format = "Linear Accel  %7.2f [m/s^2]   "
-node_name = "/can_bridge"
-parameter_name = "linear_accel_limit"
+size_flags_horizontal = 3
+display_name = "Linear Acceleration"
+save_name = "linear_acc"
+value_format = "%7.3f [m/s^2]"
+button_name_format = "%s   (%7.3f [m/s^2])"
+max_value = 15.0
+preset_names = Array[String](["普通", "低速"])
+preset_values = Array[float]([3.0, 1.0])
+
+[node name="AngularAccLimit" parent="MarginContainer/MainController/TabContainer/Limits/MarginContainer/HBoxContainer" instance=ExtResource("8_36cg0")]
+layout_mode = 2
+size_flags_horizontal = 3
+display_name = "Angular Acceleration"
+save_name = "angular_acc"
+value_format = "%7.3f [rad/s^2]"
+button_name_format = "%s   (%7.3f [rad/s^2])"
 max_value = 50.0
-
-[node name="AngularAccel" parent="MarginContainer/MainController/TabContainer/Limits/MarginContainer/VBoxContainer" instance=ExtResource("4_ldxjf")]
-layout_mode = 2
-auto_init = true
-label_format = "Angular Accel %7.2f [rad/s^2] "
-node_name = "/can_bridge"
-parameter_name = "angular_accel_limit"
-max_value = 50.0
-
-[node name="Conn" type="Panel" parent="MarginContainer/MainController/TabContainer"]
-visible = false
-layout_mode = 2
-
-[node name="ConnectionIndicator" parent="MarginContainer/MainController/TabContainer/Conn" instance=ExtResource("5_2ccwf")]
-layout_mode = 1
+preset_names = Array[String](["普通", "低速"])
+preset_values = Array[float]([50.0, 25.0])
 
 [node name="Log" type="Panel" parent="MarginContainer/MainController/TabContainer"]
 visible = false
 layout_mode = 2
 
 [node name="RosOutViewer" parent="MarginContainer/MainController/TabContainer/Log" instance=ExtResource("4_vqv0p")]
+layout_mode = 1
+
+[node name="Conn" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="ConnectionIndicator" parent="MarginContainer/MainController/TabContainer/Conn" instance=ExtResource("5_2ccwf")]
 layout_mode = 1
 
 [node name="Misc" type="Panel" parent="MarginContainer/MainController/TabContainer"]

@@ -12,9 +12,12 @@ var tim_ := Timer.new()
 
 var collecting_ := false
 var all_expanding_ := false
+var _is_prev_slow_mode := false
 
 @onready var cmd_vel_indicator_ = %CmdVelIndicator
 @onready var arm_length_slider: HBoxContainer = $TabContainer/Mech/ArmLengthController/Slider
+@onready var linear_acc_limit: HBoxContainer = $TabContainer/Limits/MarginContainer/HBoxContainer/LinearAccLimit
+@onready var angular_acc_limit: HBoxContainer = $TabContainer/Limits/MarginContainer/HBoxContainer/AngularAccLimit
 
 func _ready() -> void:
     cmd_vel_indicator_.max_linear_velocity = max_linear_speed
@@ -36,6 +39,10 @@ var _prev_time := Time.get_ticks_msec()
 func _get_velocity_multiplier(device: int) -> float:
     var shulder := clampf((Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) - 0.5) * 2, 0, 1.0)
     return 1.0 - shulder * 0.666
+
+func _is_slow_mode(device: int) -> bool:
+    var a := Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT)
+    return a < 0.5
 
 func _get_joy_stick(device: int, x_axis: int, y_axis: int) -> Vector2:
     var v: Vector2
@@ -80,7 +87,9 @@ func _timer_callback() -> void:
     var angular := 0.0
     var arm_vel := Vector2.ZERO
     
+    var slow_mode := false
     for device in CustomInput.allowed_device:
+        slow_mode = slow_mode || _is_slow_mode(device)
         var left_stick := _get_joy_stick(device, JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y)
         var right_stick := _get_joy_stick(device, JOY_AXIS_RIGHT_X, JOY_AXIS_RIGHT_Y)
         var mul := _get_velocity_multiplier(device)
@@ -90,6 +99,14 @@ func _timer_callback() -> void:
             arm_vel += right_stick * max_arm_pos_velocity
         else:
             angular += right_stick.x * mul
+    
+    if slow_mode and (not _is_prev_slow_mode):
+        linear_acc_limit.buttons.get_child(1).normal_pressed.emit()
+        angular_acc_limit.buttons.get_child(1).normal_pressed.emit()
+    elif (not slow_mode) and _is_prev_slow_mode:
+        linear_acc_limit.buttons.get_child(0).normal_pressed.emit()
+        angular_acc_limit.buttons.get_child(0).normal_pressed.emit()
+    _is_prev_slow_mode = slow_mode
     
     for device in CustomInput.allowed_device:
         var mul := _get_velocity_multiplier(device)
