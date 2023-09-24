@@ -56,7 +56,6 @@ grow_vertical = 2
 tab_alignment = 1
 
 [node name="Mech" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer"]
-visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -261,6 +260,9 @@ text = "角度調整"
 layout_mode = 2
 size_flags_vertical = 3
 text = "ロック"
+auto_init = true
+node_name = "/can_bridge"
+parameter_name = "lock_arm_angle"
 
 [node name="ArmHolizontalButton" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/ArmControlButtons"]
 layout_mode = 2
@@ -409,6 +411,7 @@ min_value = -1.0
 max_value = 1.0
 
 [node name="Limits" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
 layout_mode = 2
 script = ExtResource("4_lqmxo")
 
