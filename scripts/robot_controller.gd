@@ -42,7 +42,7 @@ func _get_velocity_multiplier(device: int) -> float:
 
 func _is_slow_mode(device: int) -> bool:
     var a := Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT)
-    return a < 0.5
+    return 0.8 < a
 
 func _get_joy_stick(device: int, x_axis: int, y_axis: int) -> Vector2:
     var v: Vector2
