@@ -100,7 +100,6 @@ func _timer_callback() -> void:
         linear.x += left_stick.y * mul
         linear.y += left_stick.x * mul
         angular += right_stick.x * mul
-        print(right_stick)
 #        if Input.is_joy_button_pressed(device, JOY_BUTTON_LEFT_SHOULDER):
 #            arm_vel += right_stick * max_arm_pos_velocity
 #        else:
@@ -115,6 +114,8 @@ func _timer_callback() -> void:
     
     for device in CustomInput.allowed_device:
         var mul := _get_velocity_multiplier(device)
+        var mirror_mode := Input.is_joy_button_pressed(device, JOY_BUTTON_LEFT_SHOULDER)
+        if mirror_mode: mul *= -1
         linear.x += mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_UP) else 0.0
         linear.x -= mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_DOWN) else 0.0
         linear.y += mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_LEFT) else 0.0
