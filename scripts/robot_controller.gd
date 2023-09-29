@@ -14,6 +14,7 @@ var collecting_ := false
 var all_expanding_ := false
 var _is_prev_slow_mode := false
 
+@onready var tab_container: TabContainer = $TabContainer
 @onready var cmd_vel_indicator_ = %CmdVelIndicator
 @onready var arm_length_slider: HBoxContainer = $TabContainer/Mech/ArmLengthController/Slider
 @onready var linear_acc_limit: HBoxContainer = $TabContainer/Limits/MarginContainer/HBoxContainer/LinearAccLimit
@@ -147,6 +148,18 @@ func _input(event: InputEvent) -> void:
                     RobotInterface.set_large_wheel_cmd(0.6)
                 else:
                     RobotInterface.set_large_wheel_cmd(0.0)
+            
+            [JOY_BUTTON_START, _]:
+                var tab_idx := tab_container.current_tab
+                if reverse:
+                    tab_idx -= 1
+                    if tab_idx < 0: tab_idx = tab_container.get_child_count() - 1
+                else:
+                    tab_idx += 1
+                tab_container.current_tab = tab_idx % tab_container.get_child_count()
+
+            [JOY_BUTTON_BACK, _]:
+                RobotInterface.set_arm_length(-1)
 
             [JOY_BUTTON_LEFT_STICK, _]:
                 RobotInterface.start_unwinding()
@@ -177,15 +190,16 @@ func _expand_all() -> void:
     RobotInterface.set_donfan_cmd(1)
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_expander_length(0.9)
-    await get_tree().create_timer(1.0).timeout
     RobotInterface.set_arm_angle(deg_to_rad(90))
+    await get_tree().create_timer(1.0).timeout
+    RobotInterface.set_arm_length(-1)
     _working = false
 
 func _retract_all() -> void:
     if _working: return
     _working = true
     RobotInterface.set_arm_angle(deg_to_rad(-60))
-    await get_tree().create_timer(1.0).timeout
+#    await get_tree().create_timer(1.0).timeout
     RobotInterface.set_expander_length(0.0)
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_donfan_cmd(-1)
