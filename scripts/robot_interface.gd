@@ -138,8 +138,7 @@ func set_arm_length(length: float) -> void:
     arm_length = length
     if 0.0 <= length and length < 0.001:
         _arm_length_pub.publish({"data": -1.0})
-    else:
-        _arm_length_pub.publish({"data": length})
+    _arm_length_pub.publish({"data": length})
     arm_length_changed.emit()
 
 func set_large_wheel_cmd(cmd: float) -> void:

@@ -136,7 +136,7 @@ func _input(event: InputEvent) -> void:
 
     if event is InputEventJoypadButton and event.pressed:
         if event.device not in CustomInput.allowed_device: return
-        print(event.button_index)
+#        print(event.button_index)
         match [event.button_index, Input.is_joy_button_pressed(event.device, JOY_BUTTON_RIGHT_SHOULDER)]:
             [JOY_BUTTON_RIGHT_STICK, _]:
                 if RobotInterface.large_wheel_cmd == 0:
@@ -196,7 +196,7 @@ func _expand_all() -> void:
     RobotInterface.set_expander_length(0.9)
     RobotInterface.set_arm_angle(deg_to_rad(90))
     await get_tree().create_timer(1.0).timeout
-    RobotInterface.set_arm_length(-1)
+    RobotInterface.set_arm_length(0.0)
     _working = false
 
 func _retract_all() -> void:
