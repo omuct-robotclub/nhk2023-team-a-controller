@@ -1,9 +1,17 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://baqy2s2jpay2"]
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://baqy2s2jpay2"]
 
 [ext_resource type="FontFile" uid="uid://dn1cdfwid8ttf" path="res://fonts/NotoSansMono_ExtraCondensed-Medium.ttf" id="1_dcrwc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jkx2s"]
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
 
 [resource]
 default_font = ExtResource("1_dcrwc")
 default_font_size = 30
+Button/styles/normal = SubResource("StyleBoxFlat_jkx2s")
 TabContainer/font_sizes/font_size = 60
 TabContainer/fonts/font = ExtResource("1_dcrwc")

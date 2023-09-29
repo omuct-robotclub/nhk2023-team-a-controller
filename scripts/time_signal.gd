@@ -31,7 +31,6 @@ func _vibrate() -> void:
     var prev_notify_state = _notify_state
     _notify_state = int(elapsed) / 10
     if prev_notify_state == _notify_state: return
-    print(_notify_state)
     var num_first := _notify_state / 6
     var num_second := _notify_state % 6
     
