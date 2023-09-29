@@ -73,7 +73,7 @@ func _timer_callback() -> void:
                     RobotInterface.arm_length -= 0.25 * dt
                 else:
                     RobotInterface.arm_length += 0.25 * dt
-                RobotInterface.set_arm_length(clampf(RobotInterface.arm_length, 0.0, 0.8))
+                RobotInterface.set_arm_length(clampf(RobotInterface.arm_length, 0.0, 0.9))
 
             if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
                 if reverse:
@@ -136,6 +136,7 @@ func _input(event: InputEvent) -> void:
 
     if event is InputEventJoypadButton and event.pressed:
         if event.device not in CustomInput.allowed_device: return
+        print(event.button_index)
         match [event.button_index, Input.is_joy_button_pressed(event.device, JOY_BUTTON_RIGHT_SHOULDER)]:
             [JOY_BUTTON_RIGHT_STICK, _]:
                 if RobotInterface.large_wheel_cmd == 0:
@@ -158,8 +159,11 @@ func _input(event: InputEvent) -> void:
                     tab_idx += 1
                 tab_container.current_tab = tab_idx % tab_container.get_child_count()
 
-            [JOY_BUTTON_BACK, _]:
-                RobotInterface.set_arm_length(-1)
+#            [JOY_BUTTON_BACK, _]:
+#                print("wtffff")
+#                RobotInterface.set_arm_length(-1)
+            
+#            [JOY_BUTTON_A]
 
             [JOY_BUTTON_LEFT_STICK, _]:
                 RobotInterface.start_unwinding()
