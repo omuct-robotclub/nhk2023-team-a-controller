@@ -38,11 +38,12 @@ func _vibrate() -> void:
     for i in range(num_first):
         Input.vibrate_handheld(100)
         await get_tree().create_timer(0.2).timeout
-        await get_tree().create_timer(0.2).timeout
+    
+    await get_tree().create_timer(0.4).timeout
     
     for i in range(num_second):
         Input.vibrate_handheld(50)
-        await get_tree().create_timer(0.1).timeout
+        await get_tree().create_timer(0.15).timeout
 
 func _process(delta: float) -> void:
     if (not started) and auto_start.button_pressed:
