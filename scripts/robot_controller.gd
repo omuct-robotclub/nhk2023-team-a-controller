@@ -144,7 +144,7 @@ func _input(event: InputEvent) -> void:
 
             [JOY_BUTTON_LEFT_STICK, _]:
                 RobotInterface.start_unwinding()
-            
+
             [JOY_BUTTON_A, false]:
                 RobotInterface.set_collector_cmd(not RobotInterface.collector_cmd)
 
@@ -153,13 +153,16 @@ func _input(event: InputEvent) -> void:
                     _retract_all()
                 else:
                     _expand_all()
-            
+
             [JOY_BUTTON_Y, true]:
                 arm_length_slider.buttons.get_child(0).normal_pressed.emit()
-                
+
+            [JOY_BUTTON_X, true]:
+                RobotInterface.set_arm_length(0.0)
+
             [JOY_BUTTON_B, true]:
                 arm_length_slider.buttons.get_child(1).normal_pressed.emit()
-            
+
             [JOY_BUTTON_A, true]:
                 arm_length_slider.buttons.get_child(2).normal_pressed.emit()
 
