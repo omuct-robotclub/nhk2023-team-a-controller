@@ -55,12 +55,6 @@ func _get_joy_stick(device: int, x_axis: int, y_axis: int) -> Vector2:
     var angle := v.angle()
     return Vector2(length, 0.0).rotated(angle)
 
-func _is_safe_arm_pos(pos: Vector2) -> bool:
-    const eps := 0.0001
-    var angle := rad_to_deg(pos.angle())
-    var length := pos.length()
-    return (60 - eps) <= angle and angle <= (110 + eps) and (arm_base_length - eps) <= length and length <= (0.8 + arm_base_length + eps)
-
 func _timer_callback() -> void:
     var now := Time.get_ticks_msec()
     var dt := (now - _prev_time) * 1e-3
@@ -87,7 +81,6 @@ func _timer_callback() -> void:
     
     var linear := Vector2.ZERO
     var angular := 0.0
-#    var arm_vel := Vector2.ZERO
     
     var slow_mode := false
     for device in CustomInput.allowed_device:
@@ -101,9 +94,6 @@ func _timer_callback() -> void:
         linear.x += left_stick.y * mul
         linear.y += left_stick.x * mul
         angular += right_stick.x * mul
-#        if Input.is_joy_button_pressed(device, JOY_BUTTON_LEFT_SHOULDER):
-#            arm_vel += right_stick * max_arm_pos_velocity
-#        else:
     
     if slow_mode and (not _is_prev_slow_mode):
         linear_acc_limit.buttons.get_child(1).normal_pressed.emit()
@@ -124,19 +114,12 @@ func _timer_callback() -> void:
     
     RobotInterface.target_linear_velocity = linear.limit_length(1) * max_linear_speed
     RobotInterface.target_angular_velocity = clampf(angular, -1, 1) * max_angular_speed
-    
-#    var arm_pos := Vector2.from_angle(RobotInterface.arm_angle) * (RobotInterface.arm_length + arm_base_length)
-#    if arm_vel.length() > 0.001 and _is_safe_arm_pos(arm_pos):
-#        var new_arm_pos := arm_pos + arm_vel * dt
-#        RobotInterface.set_arm_angle(clampf(new_arm_pos.angle(), deg_to_rad(60), deg_to_rad(110)))
-#        RobotInterface.set_arm_length(clampf(new_arm_pos.length() - arm_base_length, 0, 0.8))
 
 func _input(event: InputEvent) -> void:
     var reverse := _is_reverse(event.device)
 
     if event is InputEventJoypadButton and event.pressed:
         if event.device not in CustomInput.allowed_device: return
-#        print(event.button_index)
         match [event.button_index, Input.is_joy_button_pressed(event.device, JOY_BUTTON_RIGHT_SHOULDER)]:
             [JOY_BUTTON_RIGHT_STICK, _]:
                 if RobotInterface.large_wheel_cmd == 0:
@@ -158,12 +141,6 @@ func _input(event: InputEvent) -> void:
                 else:
                     tab_idx += 1
                 tab_container.current_tab = tab_idx % tab_container.get_child_count()
-
-#            [JOY_BUTTON_BACK, _]:
-#                print("wtffff")
-#                RobotInterface.set_arm_length(-1)
-            
-#            [JOY_BUTTON_A]
 
             [JOY_BUTTON_LEFT_STICK, _]:
                 RobotInterface.start_unwinding()
