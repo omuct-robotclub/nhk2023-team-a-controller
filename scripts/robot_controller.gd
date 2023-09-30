@@ -73,7 +73,7 @@ func _timer_callback() -> void:
                     RobotInterface.arm_length -= 0.25 * dt
                 else:
                     RobotInterface.arm_length += 0.25 * dt
-                RobotInterface.set_arm_length(clampf(RobotInterface.arm_length, 0.0, 0.9))
+                RobotInterface.set_arm_length(clampf(RobotInterface.arm_length, 0.0, 1.0))
 
             if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
                 if reverse:
@@ -193,7 +193,7 @@ func _expand_all() -> void:
     _working = true
     RobotInterface.set_donfan_cmd(1)
     await get_tree().create_timer(1.0).timeout
-    RobotInterface.set_expander_length(0.9)
+    RobotInterface.set_expander_length(1.0)
     RobotInterface.set_arm_angle(deg_to_rad(90))
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_arm_length(0.0)

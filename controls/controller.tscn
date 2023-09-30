@@ -100,7 +100,7 @@ grow_vertical = 2
 display_name = "お助け長さ"
 save_name = "arm_length"
 button_name_format = "%s (%0.0f [mm])"
-max_value = 900.0
+max_value = 1000.0
 preset_names = Array[String](["ミックス", "ぶどう", "ブルーベリー", "格納"])
 preset_values = Array[float]([800.0, 500.0, 300.0, 0.0])
 
