@@ -164,16 +164,16 @@ func _input(event: InputEvent) -> void:
             [JOY_BUTTON_A, true]:
                 arm_length_slider.buttons.get_child(2).normal_pressed.emit()
 
-            [JOY_BUTTON_DPAD_UP, false]:
+            [JOY_BUTTON_DPAD_UP, _]:
                 if reverse:
                     _retract_all()
                 else:
                     _expand_runzone()
 
-            [JOY_BUTTON_DPAD_RIGHT, true]:
+            [JOY_BUTTON_DPAD_RIGHT, _]:
                 arm_length_slider_runzone.buttons.get_child(0).normal_pressed.emit()
 
-            [JOY_BUTTON_DPAD_DOWN, true]:
+            [JOY_BUTTON_DPAD_DOWN, _]:
                 arm_length_slider_runzone.buttons.get_child(1).normal_pressed.emit()
 
 var _working := false
