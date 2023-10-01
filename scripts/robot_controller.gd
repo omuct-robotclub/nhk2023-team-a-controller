@@ -17,6 +17,7 @@ var _is_prev_slow_mode := false
 @onready var tab_container: TabContainer = $TabContainer
 @onready var cmd_vel_indicator_ = %CmdVelIndicator
 @onready var arm_length_slider: HBoxContainer = $TabContainer/Mech/ArmLengthController/Slider
+@onready var arm_length_slider_runzone: HBoxContainer = $TabContainer/Mech/ArmLengthControllerRunZone/Slider
 @onready var linear_acc_limit: HBoxContainer = $TabContainer/Limits/MarginContainer/HBoxContainer/LinearAccLimit
 @onready var angular_acc_limit: HBoxContainer = $TabContainer/Limits/MarginContainer/HBoxContainer/AngularAccLimit
 
@@ -145,17 +146,29 @@ func _input(event: InputEvent) -> void:
                 else:
                     _expand_all()
 
-            [JOY_BUTTON_Y, true]:
-                arm_length_slider.buttons.get_child(0).normal_pressed.emit()
-
             [JOY_BUTTON_X, true]:
                 RobotInterface.set_arm_length(0.0)
+
+            [JOY_BUTTON_Y, true]:
+                arm_length_slider.buttons.get_child(0).normal_pressed.emit()
 
             [JOY_BUTTON_B, true]:
                 arm_length_slider.buttons.get_child(1).normal_pressed.emit()
 
             [JOY_BUTTON_A, true]:
                 arm_length_slider.buttons.get_child(2).normal_pressed.emit()
+
+            [JOY_BUTTON_DPAD_UP, false]:
+                if reverse:
+                    _retract_all()
+                else:
+                    _expand_runzone()
+
+            [JOY_BUTTON_DPAD_RIGHT, true]:
+                arm_length_slider_runzone.buttons.get_child(0).normal_pressed.emit()
+
+            [JOY_BUTTON_DPAD_DOWN, true]:
+                arm_length_slider_runzone.buttons.get_child(1).normal_pressed.emit()
 
 var _working := false
 
@@ -165,6 +178,17 @@ func _expand_all() -> void:
     RobotInterface.set_donfan_cmd(1)
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_expander_length(1.0)
+    RobotInterface.set_arm_angle(deg_to_rad(110))
+    await get_tree().create_timer(1.0).timeout
+    RobotInterface.set_arm_length(0.0)
+    _working = false
+
+func _expand_runzone() -> void:
+    if _working: return
+    _working = true
+    RobotInterface.set_donfan_cmd(1)
+    await get_tree().create_timer(1.0).timeout
+    RobotInterface.set_expander_length(0.0)
     RobotInterface.set_arm_angle(deg_to_rad(110))
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_arm_length(0.0)

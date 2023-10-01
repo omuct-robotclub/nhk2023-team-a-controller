@@ -124,8 +124,8 @@ save_name = "arm_length_runzone"
 value_format = ""
 button_name_format = "%s (%0.0f [mm])"
 max_value = 1000.0
-preset_names = Array[String](["みかん・もも", "キウイ", "格納"])
-preset_values = Array[float]([500.0, 300.0, 0.0])
+preset_names = Array[String](["みかん・もも", "キウイ"])
+preset_values = Array[float]([500.0, 300.0])
 
 [node name="Slider" parent="MarginContainer/MainController/TabContainer/Mech/ArmLengthControllerRunZone/Slider/MarginContainer" index="0"]
 visible = false
