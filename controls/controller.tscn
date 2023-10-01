@@ -57,7 +57,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Mech" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer"]
-visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -104,6 +103,32 @@ button_name_format = "%s (%0.0f [mm])"
 max_value = 1000.0
 preset_names = Array[String](["ミックス", "ぶどう", "ブルーベリー", "格納"])
 preset_values = Array[float]([800.0, 500.0, 300.0, 0.0])
+
+[node name="ArmLengthControllerRunZone" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.7
+script = ExtResource("9_02u3r")
+
+[node name="Slider" parent="MarginContainer/MainController/TabContainer/Mech/ArmLengthControllerRunZone" instance=ExtResource("8_36cg0")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+display_name = "お助け長さ（ランゾーン）"
+save_name = "arm_length_runzone"
+value_format = ""
+button_name_format = "%s (%0.0f [mm])"
+max_value = 1000.0
+preset_names = Array[String](["みかん・もも", "キウイ", "格納"])
+preset_values = Array[float]([500.0, 300.0, 0.0])
+
+[node name="Slider" parent="MarginContainer/MainController/TabContainer/Mech/ArmLengthControllerRunZone/Slider/MarginContainer" index="0"]
+visible = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Mech"]
 layout_mode = 2
@@ -217,6 +242,7 @@ grow_horizontal = 0
 script = ExtResource("14_xppwc")
 
 [node name="Support" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
 layout_mode = 2
 script = ExtResource("4_yedj2")
 
@@ -568,6 +594,7 @@ layout_mode = 2
 horizontal_alignment = 2
 script = ExtResource("19_57jgw")
 
+[editable path="MarginContainer/MainController/TabContainer/Mech/ArmLengthControllerRunZone/Slider"]
 [editable path="MarginContainer/MainController/TabContainer/PIDGains/Steer/SteerGainController"]
 [editable path="MarginContainer/MainController/TabContainer/PIDGains/ArmAngle/ArmAngleGainController"]
 [editable path="MarginContainer/MainController/TabContainer/PIDGains/ArmLength/ArmLengthGainController"]

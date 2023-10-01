@@ -64,7 +64,8 @@ func _save_presets() -> void:
     f.store_line(JSON.stringify(data))
 
 func _on_value_changed(_value: float = 0.0) -> void:
-    current_value_label.text = value_format % slider.value
+    if value_format != "":
+        current_value_label.text = value_format % slider.value
 
 func _on_preset_changed() -> void:
     for c in buttons.get_children():
