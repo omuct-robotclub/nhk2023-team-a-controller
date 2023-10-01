@@ -103,15 +103,6 @@ func _timer_callback() -> void:
         angular_acc_limit.buttons.get_child(0).normal_pressed.emit()
     _is_prev_slow_mode = slow_mode
     
-    for device in CustomInput.allowed_device:
-        var mul := _get_velocity_multiplier(device)
-        var mirror_mode := Input.is_joy_button_pressed(device, JOY_BUTTON_LEFT_SHOULDER)
-        if mirror_mode: mul *= -1
-        linear.x += mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_UP) else 0.0
-        linear.x -= mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_DOWN) else 0.0
-        linear.y += mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_LEFT) else 0.0
-        linear.y -= mul if Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_RIGHT) else 0.0
-    
     RobotInterface.target_linear_velocity = linear.limit_length(1) * max_linear_speed
     RobotInterface.target_angular_velocity = clampf(angular, -1, 1) * max_angular_speed
 
