@@ -24,8 +24,8 @@ func _ready() -> void:
 
 func _update_label() -> void:
     var minutes := int(elapsed) / 60
-    var seconds := int(elapsed) % 60
-    label.text = "%d:%02d" % [minutes, seconds]
+    var seconds := fmod(elapsed, 60.0)
+    label.text = "%d:%04.1f" % [minutes, seconds]
 
 func _vibrate() -> void:
     var prev_notify_state = _notify_state

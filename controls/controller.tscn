@@ -373,9 +373,10 @@ grow_vertical = 2
 
 [node name="Label" type="Label" parent="MarginContainer/MainController/TabContainer/Timer/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
+size_flags_vertical = 8
 theme_override_font_sizes/font_size = 256
-text = "0:00"
+text = "0:00.0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
