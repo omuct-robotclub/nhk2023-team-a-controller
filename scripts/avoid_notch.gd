@@ -9,7 +9,7 @@ func _ready() -> void:
 
     print(safe_area)
     print(window_size)
- 
+
     var top := 0
     var left := 0
     var bottom := 0

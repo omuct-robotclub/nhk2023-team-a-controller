@@ -194,7 +194,7 @@ func _expand_runzone() -> void:
     _working = true
     RobotInterface.set_donfan_cmd(1)
     await get_tree().create_timer(1.0).timeout
-    RobotInterface.set_expander_length(0.0)
+    RobotInterface.set_expander_length(0.1)
     RobotInterface.set_arm_angle(deg_to_rad(110))
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_arm_length(0.0)
