@@ -115,13 +115,19 @@ func _input(event: InputEvent) -> void:
         match [event.button_index, Input.is_joy_button_pressed(event.device, JOY_BUTTON_RIGHT_SHOULDER)]:
             [JOY_BUTTON_RIGHT_STICK, _]:
                 if RobotInterface.large_wheel_cmd == 0:
-                    RobotInterface.set_large_wheel_cmd(0.6)
+                    if reverse:
+                        RobotInterface.set_large_wheel_cmd(-0.6)
+                    else:
+                        RobotInterface.set_large_wheel_cmd(0.6)
                 else:
                     RobotInterface.set_large_wheel_cmd(0.0)
 
             [JOY_BUTTON_MISC1, _]:
                 if RobotInterface.large_wheel_cmd == 0:
-                    RobotInterface.set_large_wheel_cmd(0.6)
+                    if reverse:
+                        RobotInterface.set_large_wheel_cmd(-0.6)
+                    else:
+                        RobotInterface.set_large_wheel_cmd(0.6)
                 else:
                     RobotInterface.set_large_wheel_cmd(0.0)
             
