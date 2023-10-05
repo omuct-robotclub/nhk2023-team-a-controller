@@ -204,7 +204,7 @@ func _retract_all() -> void:
     if _working: return
     _working = true
     RobotInterface.set_arm_angle(deg_to_rad(-60))
-#    await get_tree().create_timer(1.0).timeout
+    RobotInterface.set_arm_length(0.0)
     RobotInterface.set_expander_length(0.0)
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_donfan_cmd(-1)
