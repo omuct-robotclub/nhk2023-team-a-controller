@@ -55,6 +55,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_font_sizes/font_size = 62
 
 [node name="Mech" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer"]
 layout_mode = 2
@@ -335,17 +336,13 @@ text = "段越え"
 [node name="PreGetOverButton" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/GetOverControlButtons"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "段越え前"
+text = "段越え
+"
 
 [node name="PostGetOverButton" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/GetOverControlButtons"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "段越え後（ランゾーン）"
-
-[node name="PostGetOverButtonCenter" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/GetOverControlButtons"]
-layout_mode = 2
-size_flags_vertical = 3
-text = "段越え後（センター）"
+text = "ロープ超え"
 
 [node name="ReCalib" type="Panel" parent="MarginContainer/MainController/TabContainer"]
 visible = false

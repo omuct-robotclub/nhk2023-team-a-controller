@@ -44,7 +44,3 @@ func _ready() -> void:
             RobotInterface.set_large_wheel_cmd(0.0)
             RobotInterface.set_arm_angle(deg_to_rad(-60))
     )
-    post_get_over_button_center.pressed.connect(
-        func() -> void:
-            RobotInterface.set_large_wheel_cmd(0.0)
-    )
