@@ -8,6 +8,8 @@ extends Control
 @export var deadzone_radius := 0.2
 @export var arm_base_length := 0.775
 
+@export var arm_angle_vel := deg_to_rad(60.0)
+
 var tim_ := Timer.new()
 
 var collecting_ := false
@@ -72,13 +74,13 @@ func _timer_callback() -> void:
 
             if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
                 if reverse:
-                    var in_safe_range := RobotInterface.arm_angle >= deg_to_rad(60.0)
-                    RobotInterface.arm_angle -= deg_to_rad(60.0) * dt
-                    if in_safe_range and RobotInterface.arm_angle < deg_to_rad(60.0):
-                        RobotInterface.arm_angle = deg_to_rad(60.0)
+                    var in_safe_range := RobotInterface.arm_angle >= RobotInterface.SAFE_ARM_ANGLE
+                    RobotInterface.arm_angle -= arm_angle_vel * dt
+                    if in_safe_range and RobotInterface.arm_angle < RobotInterface.SAFE_ARM_ANGLE:
+                        RobotInterface.arm_angle = RobotInterface.SAFE_ARM_ANGLE
                 else:
-                    RobotInterface.arm_angle += deg_to_rad(60.0) * dt
-                RobotInterface.set_arm_angle(clampf(RobotInterface.arm_angle, deg_to_rad(-60.0), deg_to_rad(110.0)))
+                    RobotInterface.arm_angle += arm_angle_vel * dt
+                RobotInterface.set_arm_angle(clampf(RobotInterface.arm_angle, RobotInterface.ARM_ANGLE_MIN, RobotInterface.ARM_ANGLE_MAX))
     
     var linear := Vector2.ZERO
     var angular := 0.0
@@ -184,7 +186,7 @@ func _expand_all() -> void:
     RobotInterface.set_donfan_cmd(1)
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_expander_length(1.0)
-    RobotInterface.set_arm_angle(deg_to_rad(110))
+    RobotInterface.set_arm_angle(deg_to_rad(90))
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_arm_length(0.0)
     _working = false
@@ -195,7 +197,7 @@ func _expand_runzone() -> void:
     RobotInterface.set_donfan_cmd(1)
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_expander_length(0.1)
-    RobotInterface.set_arm_angle(deg_to_rad(110))
+    RobotInterface.set_arm_angle(deg_to_rad(90))
     await get_tree().create_timer(1.0).timeout
     RobotInterface.set_arm_length(0.0)
     _working = false
@@ -203,7 +205,7 @@ func _expand_runzone() -> void:
 func _retract_all() -> void:
     if _working: return
     _working = true
-    RobotInterface.set_arm_angle(deg_to_rad(-60))
+    RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN)
     RobotInterface.set_arm_length(0.0)
     RobotInterface.set_expander_length(0.0)
     await get_tree().create_timer(1.0).timeout

@@ -12,6 +12,10 @@ signal large_wheel_cmd_changed()
 signal linear_accel_limit_changed()
 signal angular_accel_limit_changed()
 
+const ARM_ANGLE_MIN := deg_to_rad(-25.0)
+const ARM_ANGLE_MAX := deg_to_rad(122.5)
+const SAFE_ARM_ANGLE := deg_to_rad(60.0)
+
 var cmd_vel_publisher_enabled := true
 var cmd_vel_frame := "base_footprint"
 var donfan_cmd: int
@@ -91,7 +95,7 @@ func _steer_states_callback(msg: Dictionary) -> void:
     steer_state_changed.emit()
 
 func _publish_command() -> void:
-    if cmd_vel_publisher_enabled:
+    if cmd_vel_publisher_enabled and _idle_time < 0.3:
         _cmd_vel_stamped_pub.publish({
             "header": {
                 "frame_id": cmd_vel_frame
