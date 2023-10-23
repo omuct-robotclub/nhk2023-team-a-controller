@@ -31,7 +31,7 @@ var filtered_linear_velocity := Vector2()
 var filtered_angular_velocity := 0.0
 
 var _publish_command_timer := Timer.new()
-@onready var _cmd_vel_stamped_pub := rosbridge.create_publisher("geometry_msgs/TwistStamped", "cmd_vel_stamped")
+@onready var _cmd_vel_stamped_pub := rosbridge.create_publisher("geometry_msgs/TwistStamped", "manual_cmd_vel")
 @warning_ignore("unused_private_class_variable")
 @onready var _cmd_vel_filtered_sub := rosbridge.create_subscription("geometry_msgs/Twist", "cmd_vel_filtered", _cmd_vel_filtered_callback)
 var _actual_linear_vel := Vector2()
@@ -49,6 +49,8 @@ var _collector_cmd_pub := rosbridge.create_publisher("std_msgs/Bool", "collector
 var _arm_angle_pub := rosbridge.create_publisher("std_msgs/Float64", "arm_angle")
 var _arm_length_pub := rosbridge.create_publisher("std_msgs/Float64", "arm_length")
 var _large_wheel_cmd_pub := rosbridge.create_publisher("std_msgs/Float64", "large_wheel_cmd")
+
+var _idle_time := 0.0
 
 func init() -> void:
     _publish_command_timer.wait_time = 0.01
@@ -70,6 +72,11 @@ func _process(delta: float) -> void:
         filtered_angular_velocity = target_angular_velocity
     else:
         filtered_angular_velocity += clampf(angular_diff, -angular_max_delta, angular_max_delta)
+    
+    if filtered_linear_velocity.length() < 0.01 and abs(filtered_angular_velocity) < 0.01:
+        _idle_time += delta
+    else:
+        _idle_time = 0.0
 #    print(target_linear_velocity, filtered_linear_velocity)
 
 func _cmd_vel_filtered_callback(msg: Dictionary) -> void:
