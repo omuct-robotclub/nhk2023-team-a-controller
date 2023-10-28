@@ -12,7 +12,7 @@ signal large_wheel_cmd_changed()
 signal linear_accel_limit_changed()
 signal angular_accel_limit_changed()
 
-const ARM_ANGLE_MIN := deg_to_rad(-25.0)
+const ARM_ANGLE_MIN := deg_to_rad(-30.0)
 const ARM_ANGLE_MAX := deg_to_rad(122.5)
 const SAFE_ARM_ANGLE := deg_to_rad(60.0)
 
