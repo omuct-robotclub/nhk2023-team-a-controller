@@ -74,10 +74,7 @@ func _timer_callback() -> void:
 
             if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
                 if reverse:
-                    var in_safe_range := RobotInterface.arm_angle >= RobotInterface.SAFE_ARM_ANGLE
                     RobotInterface.arm_angle -= arm_angle_vel * dt
-                    if in_safe_range and RobotInterface.arm_angle < RobotInterface.SAFE_ARM_ANGLE:
-                        RobotInterface.arm_angle = RobotInterface.SAFE_ARM_ANGLE
                 else:
                     RobotInterface.arm_angle += arm_angle_vel * dt
                 RobotInterface.set_arm_angle(clampf(RobotInterface.arm_angle, RobotInterface.ARM_ANGLE_MIN, RobotInterface.ARM_ANGLE_MAX))

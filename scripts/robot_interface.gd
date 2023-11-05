@@ -14,7 +14,6 @@ signal angular_accel_limit_changed()
 
 const ARM_ANGLE_MIN := deg_to_rad(-30.0)
 const ARM_ANGLE_MAX := deg_to_rad(122.5)
-const SAFE_ARM_ANGLE := deg_to_rad(60.0)
 
 var cmd_vel_publisher_enabled := true
 var cmd_vel_frame := "base_footprint"
