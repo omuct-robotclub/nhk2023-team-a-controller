@@ -25,6 +25,7 @@ func _ready() -> void:
     tree.set_column_title(1, "Message")
     tree.set_column_title(2, "Node")
     tree.set_column_title(3, "Severity")
+    
 
 func _level_to_text(level: int) -> String:
     if level <= 10: return "DEBUG"
@@ -56,5 +57,7 @@ func _rosout_callback(msg: Dictionary) -> void:
         tree.scroll_to_item(item)
     
     while history_length < root.get_child_count():
-        root.remove_child(root.get_child(0))
+        var child := root.get_child(0)
+        root.remove_child(child)
+        child.free()
     _msg_count += 1

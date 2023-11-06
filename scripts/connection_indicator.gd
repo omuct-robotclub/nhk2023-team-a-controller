@@ -46,6 +46,7 @@ func _ready() -> void:
 func _timer_callback() -> void:
     for child in interfaces.get_children():
         interfaces.remove_child(child)
+        child.queue_free()
     var ifaces := IP.get_local_interfaces()
     ifaces.sort_custom(func(a, b): return int(a["index"]) < int(b["index"]))
     for iface in ifaces:
