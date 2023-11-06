@@ -113,22 +113,10 @@ func _input(event: InputEvent) -> void:
         if event.device not in CustomInput.allowed_device: return
         match [event.button_index, Input.is_joy_button_pressed(event.device, JOY_BUTTON_RIGHT_SHOULDER)]:
             [JOY_BUTTON_RIGHT_STICK, _]:
-                if RobotInterface.large_wheel_cmd == 0:
-                    if reverse:
-                        RobotInterface.set_large_wheel_cmd(-0.6)
-                    else:
-                        RobotInterface.set_large_wheel_cmd(0.6)
-                else:
-                    RobotInterface.set_large_wheel_cmd(0.0)
+                RobotInterface.set_enable_large_wheel(not RobotInterface.enable_large_wheel)
 
             [JOY_BUTTON_MISC1, _]:
-                if RobotInterface.large_wheel_cmd == 0:
-                    if reverse:
-                        RobotInterface.set_large_wheel_cmd(-0.6)
-                    else:
-                        RobotInterface.set_large_wheel_cmd(0.6)
-                else:
-                    RobotInterface.set_large_wheel_cmd(0.0)
+                RobotInterface.set_enable_large_wheel(not RobotInterface.enable_large_wheel)
             
             [JOY_BUTTON_START, _]:
                 var tab_idx := tab_container.current_tab

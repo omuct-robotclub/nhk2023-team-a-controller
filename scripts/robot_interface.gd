@@ -8,9 +8,9 @@ signal expander_length_changed()
 signal collector_cmd_changed()
 signal arm_length_changed()
 signal arm_angle_changed()
-signal large_wheel_cmd_changed()
 signal linear_accel_limit_changed()
 signal angular_accel_limit_changed()
+signal enable_large_wheel_changed()
 
 const ARM_ANGLE_MIN := deg_to_rad(-30.0)
 const ARM_ANGLE_MAX := deg_to_rad(122.5)
@@ -22,7 +22,7 @@ var expander_length: float
 var collector_cmd: bool
 var arm_angle: float
 var arm_length: float
-var large_wheel_cmd: float
+var enable_large_wheel := false
 
 var linear_accel_limit := 10.0
 var angular_accel_limit := 10.0
@@ -109,6 +109,10 @@ func _publish_command() -> void:
                 }
             }
         })
+        if enable_large_wheel:
+            _large_wheel_cmd_pub.publish({
+                "data": 0.6 * sign(filtered_linear_velocity.x)
+            })
 
 func get_filtered_target_linear_velocity() -> Vector2: return _actual_linear_vel
 func get_filtered_target_angular_velocity() -> float: return _actual_angular_vel
@@ -151,11 +155,6 @@ func set_arm_length(length: float) -> void:
         _arm_length_pub.publish({"data": -1.0})
     arm_length_changed.emit()
 
-func set_large_wheel_cmd(cmd: float) -> void:
-    large_wheel_cmd = cmd
-    _large_wheel_cmd_pub.publish({"data": cmd})
-    large_wheel_cmd_changed.emit()
-
 func set_linear_accel_limit(limit: float) -> void:
     linear_accel_limit = limit
     linear_accel_limit_changed.emit()
@@ -163,3 +162,9 @@ func set_linear_accel_limit(limit: float) -> void:
 func set_angular_accel_limit(limit: float) -> void:
     angular_accel_limit = limit
     angular_accel_limit_changed.emit()
+
+func set_enable_large_wheel(enable: bool) -> void:
+    enable_large_wheel = enable
+    enable_large_wheel_changed.emit()
+    if not enable:
+        _large_wheel_cmd_pub.publish({"data": 0.0})
