@@ -7,7 +7,6 @@ extends Panel
 @onready var donfan_retract_button: Button = $HBoxContainer/DonfanControlButtons/DonfanRetractButton
 @onready var pre_get_over_button: Button = $HBoxContainer/GetOverControlButtons/PreGetOverButton
 @onready var post_get_over_button: Button = $HBoxContainer/GetOverControlButtons/PostGetOverButton
-@onready var post_get_over_button_center: Button = $HBoxContainer/GetOverControlButtons/PostGetOverButtonCenter
 
 
 func _ready() -> void:
