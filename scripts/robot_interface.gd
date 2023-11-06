@@ -12,7 +12,7 @@ signal linear_accel_limit_changed()
 signal angular_accel_limit_changed()
 signal enable_large_wheel_changed()
 
-const ARM_ANGLE_MIN := deg_to_rad(-30.0)
+const ARM_ANGLE_MIN := deg_to_rad(-35.0)
 const ARM_ANGLE_MAX := deg_to_rad(122.5)
 
 var cmd_vel_publisher_enabled := true
