@@ -11,6 +11,7 @@ signal arm_angle_changed()
 signal linear_accel_limit_changed()
 signal angular_accel_limit_changed()
 signal enable_large_wheel_changed()
+signal enable_wall_tracking_changed()
 
 const ARM_ANGLE_MIN := deg_to_rad(-35.0)
 const ARM_ANGLE_MAX := deg_to_rad(125.0)
@@ -23,6 +24,7 @@ var collector_cmd: bool
 var arm_angle: float
 var arm_length: float
 var enable_large_wheel := false
+var enable_wall_tracking := false
 
 var linear_accel_limit := 10.0
 var angular_accel_limit := 10.0
@@ -34,7 +36,7 @@ var filtered_linear_velocity := Vector2()
 var filtered_angular_velocity := 0.0
 
 var _publish_command_timer := Timer.new()
-@onready var _cmd_vel_stamped_pub := rosbridge.create_publisher("geometry_msgs/TwistStamped", "manual_cmd_vel")
+@onready var _cmd_vel_pub := rosbridge.create_publisher("geometry_msgs/Twist", "manual_cmd_vel")
 @warning_ignore("unused_private_class_variable")
 @onready var _cmd_vel_filtered_sub := rosbridge.create_subscription("geometry_msgs/Twist", "cmd_vel_filtered", _cmd_vel_filtered_callback)
 var _actual_linear_vel := Vector2()
@@ -95,18 +97,14 @@ func _steer_states_callback(msg: Dictionary) -> void:
 
 func _publish_command() -> void:
     if cmd_vel_publisher_enabled and _idle_time < 0.3:
-        _cmd_vel_stamped_pub.publish({
-            "header": {
-                "frame_id": cmd_vel_frame
+        _cmd_vel_pub.publish({
+            "linear": {
+                "x": filtered_linear_velocity.x,
+                "y": filtered_linear_velocity.y,
+                "z": 1.0 if enable_wall_tracking else 0.0,
             },
-            "twist": {
-                "linear": {
-                    "x": filtered_linear_velocity.x,
-                    "y": filtered_linear_velocity.y
-                },
-                "angular": {
-                    "z": filtered_angular_velocity
-                }
+            "angular": {
+                "z": filtered_angular_velocity
             }
         })
         if enable_large_wheel:
@@ -168,3 +166,7 @@ func set_enable_large_wheel(enable: bool) -> void:
     enable_large_wheel_changed.emit()
     if not enable:
         _large_wheel_cmd_pub.publish({"data": 0.0})
+
+func set_enable_wall_tracking(enable: bool) -> void:
+    enable_wall_tracking = enable
+    enable_wall_tracking_changed.emit()

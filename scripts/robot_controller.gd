@@ -53,10 +53,14 @@ func _get_joy_stick(device: int, x_axis: int, y_axis: int) -> Vector2:
         -Input.get_joy_axis(device, x_axis),
         -Input.get_joy_axis(device, y_axis),
     )
-    var length := maxf(v.length() - deadzone_radius, 0.0)
-    length /= 1 - deadzone_radius
-    var angle := v.angle()
-    return Vector2(length, 0.0).rotated(angle)
+    if v.length() < deadzone_radius:
+        return Vector2.ZERO
+    else:
+        return v
+#    var length := maxf(v.length() - deadzone_radius, 0.0)
+#    length /= 1 - deadzone_radius
+#    var angle := v.angle()
+#    return Vector2(length, 0.0).rotated(angle)
 
 func _timer_callback() -> void:
     var now := Time.get_ticks_msec()
@@ -131,7 +135,7 @@ func _input(event: InputEvent) -> void:
                 RobotInterface.start_unwinding()
 
             [JOY_BUTTON_A, false]:
-                RobotInterface.set_collector_cmd(not RobotInterface.collector_cmd)
+                RobotInterface.set_enable_wall_tracking(not RobotInterface.enable_wall_tracking)
 
             [JOY_BUTTON_Y, false]:
                 if reverse:
@@ -161,7 +165,8 @@ func _input(event: InputEvent) -> void:
                 arm_length_slider_runzone.buttons.get_child(0).normal_pressed.emit()
 
             [JOY_BUTTON_DPAD_DOWN, _]:
-                arm_length_slider_runzone.buttons.get_child(1).normal_pressed.emit()
+                RobotInterface.set_collector_cmd(not RobotInterface.collector_cmd)
+#                arm_length_slider_runzone.buttons.get_child(1).normal_pressed.emit()
 
 var _working := false
 
