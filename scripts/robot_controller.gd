@@ -193,6 +193,6 @@ func _retract_all() -> void:
     RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN)
     RobotInterface.set_arm_length(0.0)
     RobotInterface.set_expander_length(0.0)
-    await get_tree().create_timer(1.0).timeout
+    await get_tree().create_timer(1.5).timeout
     RobotInterface.set_donfan_cmd(-1)
     _working = false
