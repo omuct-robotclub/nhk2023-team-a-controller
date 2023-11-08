@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://cgn8t07t2if4f"]
+[gd_scene load_steps=25 format=3 uid="uid://cgn8t07t2if4f"]
 
 [ext_resource type="Theme" uid="uid://baqy2s2jpay2" path="res://theme.tres" id="1_vm7p2"]
 [ext_resource type="Script" path="res://scripts/avoid_notch.gd" id="2_3tkds"]
@@ -19,7 +19,6 @@
 [ext_resource type="Script" path="res://scripts/expander_controller.gd" id="10_yswmu"]
 [ext_resource type="Script" path="res://scripts/donfan_controller.gd" id="11_74va8"]
 [ext_resource type="Script" path="res://scripts/collector_controller.gd" id="12_0dauf"]
-[ext_resource type="Script" path="res://scripts/base_frame_selector.gd" id="13_d5gog"]
 [ext_resource type="PackedScene" uid="uid://bchevd0lkkn66" path="res://controls/steer_controller.tscn" id="14_ljk4t"]
 [ext_resource type="Script" path="res://scripts/cmd_vel_publisher_enable_button.gd" id="14_xppwc"]
 [ext_resource type="PackedScene" uid="uid://d8u6tnxsamax" path="res://controls/target_vel_indicator.tscn" id="15_2luak"]
@@ -212,25 +211,6 @@ layout_mode = 2
 anchors_preset = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="MenuButton" type="MenuButton" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/Panel"]
-layout_mode = 1
-offset_right = 253.0
-offset_bottom = 92.0
-text = "Base Frame"
-alignment = 0
-vertical_icon_alignment = 0
-item_count = 3
-popup/item_0/text = "base_footprint"
-popup/item_0/checkable = 2
-popup/item_0/id = 0
-popup/item_1/text = "odom"
-popup/item_1/checkable = 2
-popup/item_1/id = 1
-popup/item_2/text = "map"
-popup/item_2/checkable = 2
-popup/item_2/id = 2
-script = ExtResource("13_d5gog")
 
 [node name="CheckButton" type="CheckButton" parent="MarginContainer/MainController/TabContainer/Mech/VBoxContainer/Panel"]
 layout_mode = 1
