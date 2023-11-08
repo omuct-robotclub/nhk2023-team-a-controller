@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://cgn8t07t2if4f"]
+[gd_scene load_steps=24 format=3 uid="uid://cgn8t07t2if4f"]
 
 [ext_resource type="Theme" uid="uid://baqy2s2jpay2" path="res://theme.tres" id="1_vm7p2"]
 [ext_resource type="Script" path="res://scripts/avoid_notch.gd" id="2_3tkds"]
@@ -7,7 +7,6 @@
 [ext_resource type="Script" path="res://scripts/recalibration.gd" id="4_3eh2p"]
 [ext_resource type="Script" path="res://scripts/acc_limit_controller.gd" id="4_lqmxo"]
 [ext_resource type="Script" path="res://scripts/time_signal.gd" id="4_taf0e"]
-[ext_resource type="PackedScene" uid="uid://muuiqpin0e6h" path="res://controls/rosout_viewer.tscn" id="4_vqv0p"]
 [ext_resource type="Script" path="res://scripts/support_controller.gd" id="4_yedj2"]
 [ext_resource type="PackedScene" uid="uid://d3u0tvvu78rlr" path="res://controls/connection_indicator.tscn" id="5_2ccwf"]
 [ext_resource type="PackedScene" uid="uid://d0ej8q12otx8p" path="res://controls/parameter_button.tscn" id="5_os7o2"]
@@ -527,13 +526,6 @@ button_name_format = "%s   (%7.3f [rad/s^2])"
 max_value = 50.0
 preset_names = Array[String](["普通", "低速"])
 preset_values = Array[float]([50.0, 25.0])
-
-[node name="Log" type="Panel" parent="MarginContainer/MainController/TabContainer"]
-visible = false
-layout_mode = 2
-
-[node name="RosOutViewer" parent="MarginContainer/MainController/TabContainer/Log" instance=ExtResource("4_vqv0p")]
-layout_mode = 1
 
 [node name="Conn" type="Panel" parent="MarginContainer/MainController/TabContainer"]
 visible = false
