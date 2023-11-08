@@ -8,7 +8,6 @@
 [ext_resource type="Script" path="res://scripts/time_signal.gd" id="4_taf0e"]
 [ext_resource type="Script" path="res://scripts/support_controller.gd" id="4_yedj2"]
 [ext_resource type="PackedScene" uid="uid://d3u0tvvu78rlr" path="res://controls/connection_indicator.tscn" id="5_2ccwf"]
-[ext_resource type="PackedScene" uid="uid://d0ej8q12otx8p" path="res://controls/parameter_button.tscn" id="5_os7o2"]
 [ext_resource type="PackedScene" uid="uid://cc4ksg2t1kxax" path="res://controls/pid_gain_controller.tscn" id="6_waxgt"]
 [ext_resource type="Script" path="res://scripts/arm_angle_controller.gd" id="7_8lga2"]
 [ext_resource type="PackedScene" uid="uid://do7v7wvbjylin" path="res://controls/slider_with_preset_buttons.tscn" id="8_36cg0"]
@@ -17,6 +16,7 @@
 [ext_resource type="Script" path="res://scripts/expander_controller.gd" id="10_yswmu"]
 [ext_resource type="Script" path="res://scripts/donfan_controller.gd" id="11_74va8"]
 [ext_resource type="Script" path="res://scripts/collector_controller.gd" id="12_0dauf"]
+[ext_resource type="Script" path="res://scripts/mech2_controller.gd" id="12_ck5th"]
 [ext_resource type="PackedScene" uid="uid://bchevd0lkkn66" path="res://controls/steer_controller.tscn" id="14_ljk4t"]
 [ext_resource type="Script" path="res://scripts/cmd_vel_publisher_enable_button.gd" id="14_xppwc"]
 [ext_resource type="PackedScene" uid="uid://d8u6tnxsamax" path="res://controls/target_vel_indicator.tscn" id="15_2luak"]
@@ -74,9 +74,9 @@ grow_horizontal = 2
 grow_vertical = 2
 display_name = "お助け角度"
 save_name = "arm_angle"
-value_format = "%5.0f [deg]"
-button_name_format = "%s (%0.0f [deg])"
-min_value = -60.0
+value_format = "%3.0f [deg]"
+button_name_format = "%s (%3.0f [deg])"
+min_value = -35.0
 max_value = 110.0
 preset_names = Array[String](["展開", "水平", "格納"])
 preset_values = Array[float]([122.5, 1.45519e-11, -35.0])
@@ -97,7 +97,8 @@ grow_horizontal = 2
 grow_vertical = 2
 display_name = "お助け長さ"
 save_name = "arm_length"
-button_name_format = "%s (%0.0f [mm])"
+value_format = "%4.0f [mm]"
+button_name_format = "%s (%4.0f [mm])"
 max_value = 1000.0
 preset_names = Array[String](["ミックス", "ぶどう", "ブルーベリー", "格納"])
 preset_values = Array[float]([800.0, 500.0, 300.0, 0.0])
@@ -220,6 +221,135 @@ offset_bottom = 84.0
 grow_horizontal = 0
 script = ExtResource("14_xppwc")
 
+[node name="Mech2" type="Panel" parent="MarginContainer/MainController/TabContainer"]
+visible = false
+layout_mode = 2
+script = ExtResource("12_ck5th")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer/Mech2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ArmAngle" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer" instance=ExtResource("8_36cg0")]
+layout_mode = 2
+size_flags_horizontal = 3
+display_name = "お助け角度"
+save_name = "arm_angle_cheat"
+value_format = "%3.0f [deg]"
+button_name_format = "%s (%3.0f [deg])"
+min_value = -35.0
+max_value = 122.5
+preset_names = Array[String](["1", "2", "3", "4", "5", "6", "7", "8"])
+preset_values = Array[float]([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+container_type = 1
+
+[node name="ArmLength" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer" instance=ExtResource("8_36cg0")]
+layout_mode = 2
+size_flags_horizontal = 3
+display_name = "お助け長さ"
+save_name = "arm_length_cheat"
+value_format = "%4.0f [mm]"
+button_name_format = "%s (%4.0f [mm])"
+max_value = 1000.0
+preset_names = Array[String](["1", "2", "3", "4", "5", "6", "7", "8"])
+preset_values = Array[float]([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+container_type = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.7
+
+[node name="DonfanController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("11_74va8")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer/VBoxContainer/DonfanController"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer/VBoxContainer/DonfanController/VBoxContainer"]
+layout_mode = 2
+text = "ドンファン"
+
+[node name="Extend" type="Button" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer/VBoxContainer/DonfanController/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "展開"
+
+[node name="Retract" type="Button" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer/VBoxContainer/DonfanController/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "格納"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CollectorController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+script = ExtResource("12_0dauf")
+
+[node name="CheckButton" type="CheckButton" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer/VBoxContainer/HBoxContainer/CollectorController"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+text = "下回収"
+
+[node name="LargeWheelController" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+script = ExtResource("10_p6ao5")
+
+[node name="CheckButton" type="CheckButton" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer/VBoxContainer/HBoxContainer/LargeWheelController"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+text = "大径"
+
+[node name="Panel" type="Panel" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CmdVelIndicator" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer/VBoxContainer/Panel" instance=ExtResource("15_2luak")]
+layout_mode = 2
+anchors_preset = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CheckButton" type="CheckButton" parent="MarginContainer/MainController/TabContainer/Mech2/HBoxContainer/VBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -194.0
+offset_bottom = 84.0
+grow_horizontal = 0
+script = ExtResource("14_xppwc")
+
 [node name="Support" type="Panel" parent="MarginContainer/MainController/TabContainer"]
 visible = false
 layout_mode = 2
@@ -261,14 +391,6 @@ size_flags_horizontal = 3
 [node name="Label" type="Label" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/ArmControlButtons"]
 layout_mode = 2
 text = "角度調整"
-
-[node name="ArmLockButton" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/ArmControlButtons" instance=ExtResource("5_os7o2")]
-layout_mode = 2
-size_flags_vertical = 3
-text = "ロック"
-auto_init = true
-node_name = "/can_bridge"
-parameter_name = "lock_arm_angle"
 
 [node name="ArmVirticalButton" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/ArmControlButtons"]
 layout_mode = 2

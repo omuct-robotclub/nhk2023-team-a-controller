@@ -22,6 +22,9 @@ var _is_prev_slow_mode := false
 @onready var arm_length_slider_runzone: HBoxContainer = $TabContainer/Mech/ArmLengthControllerRunZone/Slider
 @onready var linear_acc_limit: HBoxContainer = $TabContainer/Limits/MarginContainer/HBoxContainer/LinearAccLimit
 @onready var angular_acc_limit: HBoxContainer = $TabContainer/Limits/MarginContainer/HBoxContainer/AngularAccLimit
+@onready var cheat_arm_angle: HBoxContainer = $TabContainer/Mech2/HBoxContainer/ArmAngle
+@onready var cheat_arm_length: HBoxContainer = $TabContainer/Mech2/HBoxContainer/ArmLength
+
 
 func _ready() -> void:
     cmd_vel_indicator_.max_linear_velocity = max_linear_speed
@@ -76,7 +79,8 @@ func _timer_callback() -> void:
     var dt := (now - _prev_time) * 1e-3
     _prev_time = now
     for device in CustomInput.allowed_device:
-        if not Input.is_joy_button_pressed(device, JOY_BUTTON_RIGHT_SHOULDER):
+        if not Input.is_joy_button_pressed(device, JOY_BUTTON_RIGHT_SHOULDER) \
+            and not Input.is_joy_button_pressed(device, JOY_BUTTON_LEFT_SHOULDER):
             var reverse := _is_reverse(device)
             if Input.is_joy_button_pressed(device, JOY_BUTTON_X):
                 if reverse:
@@ -99,13 +103,10 @@ func _timer_callback() -> void:
     
     var slow_mode := false
     for device in CustomInput.allowed_device:
-        var mirror_mode := Input.is_joy_button_pressed(device, JOY_BUTTON_LEFT_SHOULDER)
         slow_mode = slow_mode || _is_slow_mode(device)
         var left_stick := _get_joy_stick(device, JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y)
         var right_stick := _get_joy_stick(device, JOY_AXIS_RIGHT_X, JOY_AXIS_RIGHT_Y)
         var mul := _get_velocity_multiplier(device)
-        if mirror_mode:
-            left_stick = -left_stick
         linear.x += left_stick.y * mul
         linear.y += left_stick.x * mul
         angular += right_stick.x * mul
@@ -125,19 +126,20 @@ func _timer_callback() -> void:
     RobotInterface.in_course = in_course
     RobotInterface.out_course = out_course
 
+func _cheat(index: int) -> void:
+    assert(1 <= index and index <= 8)
+    cheat_arm_angle.buttons.get_child(index-1).normal_pressed.emit()
+    cheat_arm_length.buttons.get_child(index-1).normal_pressed.emit()
+
 func _input(event: InputEvent) -> void:
     var reverse := _is_reverse(event.device)
 
     if event is InputEventJoypadButton and event.pressed:
         if event.device not in CustomInput.allowed_device: return
-        match [event.button_index, Input.is_joy_button_pressed(event.device, JOY_BUTTON_RIGHT_SHOULDER)]:
-            [JOY_BUTTON_RIGHT_STICK, _]:
-                RobotInterface.set_enable_large_wheel(not RobotInterface.enable_large_wheel)
-
-            [JOY_BUTTON_MISC1, _]:
-                RobotInterface.set_enable_large_wheel(not RobotInterface.enable_large_wheel)
-            
-            [JOY_BUTTON_START, _]:
+        var l1 := Input.is_joy_button_pressed(event.device, JOY_BUTTON_LEFT_SHOULDER)
+        var r1 := Input.is_joy_button_pressed(event.device, JOY_BUTTON_RIGHT_SHOULDER)
+        match [event.button_index, l1, r1]:
+            [JOY_BUTTON_START, _, _]:
                 var tab_idx := tab_container.current_tab
                 if reverse:
                     tab_idx -= 1
@@ -146,42 +148,37 @@ func _input(event: InputEvent) -> void:
                     tab_idx += 1
                 tab_container.current_tab = tab_idx % tab_container.get_child_count()
 
-            [JOY_BUTTON_LEFT_STICK, _]:
-                RobotInterface.set_enable_wall_tracking(not RobotInterface.enable_wall_tracking)
+            [JOY_BUTTON_DPAD_UP, false, false]: _cheat(1)
+            [JOY_BUTTON_DPAD_DOWN, false, false]: RobotInterface.set_collector_cmd(not RobotInterface.collector_cmd)
+            [JOY_BUTTON_DPAD_LEFT, false, false]: _cheat(2)
+            [JOY_BUTTON_DPAD_RIGHT, false, false]: _cheat(3)
+            
+            [JOY_BUTTON_Y, false, false]:
+                if reverse: _retract_all()
+                else: _expand_all()
+            [JOY_BUTTON_A, false, false]: RobotInterface.start_unwinding()
 
-            [JOY_BUTTON_A, false]:
-                RobotInterface.start_unwinding()
+            [JOY_BUTTON_Y, true, false]:
+                if reverse: _retract_all()
+                else: _expand_runzone()
+            [JOY_BUTTON_B, true, false]: arm_length_slider_runzone.buttons.get_child(0).normal_pressed.emit()
+            [JOY_BUTTON_A, true, false]: arm_length_slider_runzone.buttons.get_child(1).normal_pressed.emit()
+            [JOY_BUTTON_X, true, false]: arm_length_slider_runzone.buttons.get_child(2).normal_pressed.emit()
 
-            [JOY_BUTTON_Y, false]:
-                if reverse:
-                    _retract_all()
-                else:
-                    _expand_all()
+            [JOY_BUTTON_DPAD_UP, true, false]: _cheat(4)
+            [JOY_BUTTON_DPAD_DOWN, true, false]: _cheat(5)
+            [JOY_BUTTON_DPAD_LEFT, true, false]: _cheat(6)
+            [JOY_BUTTON_DPAD_RIGHT, true, false]: _cheat(7)
+            
+            [JOY_BUTTON_LEFT_STICK, _, _]: RobotInterface.set_enable_wall_tracking(not RobotInterface.enable_wall_tracking)
 
-            [JOY_BUTTON_X, true]:
-                RobotInterface.set_arm_length(0.0)
-
-            [JOY_BUTTON_Y, true]:
-                arm_length_slider.buttons.get_child(0).normal_pressed.emit()
-
-            [JOY_BUTTON_B, true]:
-                arm_length_slider.buttons.get_child(1).normal_pressed.emit()
-
-            [JOY_BUTTON_A, true]:
-                arm_length_slider.buttons.get_child(2).normal_pressed.emit()
-
-            [JOY_BUTTON_DPAD_UP, _]:
-                if reverse:
-                    _retract_all()
-                else:
-                    _expand_runzone()
-
-            [JOY_BUTTON_DPAD_RIGHT, _]:
-                arm_length_slider_runzone.buttons.get_child(0).normal_pressed.emit()
-
-            [JOY_BUTTON_DPAD_DOWN, _]:
-                RobotInterface.set_collector_cmd(not RobotInterface.collector_cmd)
-#                arm_length_slider_runzone.buttons.get_child(1).normal_pressed.emit()
+            [JOY_BUTTON_Y, false, true]: arm_length_slider.buttons.get_child(0).normal_pressed.emit()
+            [JOY_BUTTON_B, false, true]: arm_length_slider.buttons.get_child(1).normal_pressed.emit()
+            [JOY_BUTTON_A, false, true]: arm_length_slider.buttons.get_child(2).normal_pressed.emit()
+            [JOY_BUTTON_X, false, true]: RobotInterface.set_arm_length(0.0)
+            
+            [JOY_BUTTON_RIGHT_STICK, _, _]: RobotInterface.set_enable_large_wheel(not RobotInterface.enable_large_wheel)
+            [JOY_BUTTON_MISC1, _, _]: RobotInterface.set_enable_large_wheel(not RobotInterface.enable_large_wheel)
 
 var _working := false
 

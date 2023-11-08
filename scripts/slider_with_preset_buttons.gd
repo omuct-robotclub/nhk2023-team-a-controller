@@ -1,5 +1,10 @@
 extends HBoxContainer
-class_name SliderWithPresetButtons
+class_name SliderWithPresetButtons 
+
+enum ContainerType {
+    VBox,
+    Grid,
+}
 
 @export var display_name: String
 @export var save_name: String
@@ -9,15 +14,28 @@ class_name SliderWithPresetButtons
 @export var max_value := 500.0
 @export var preset_names: Array[String]
 @export var preset_values: Array[float]
+@export var container_type := ContainerType.VBox
+@export var columns := 2
 
 @onready var slider: VSlider = %Slider
 @onready var name_label: Label = %NameLabel
 @onready var current_value_label: Label = %CurrentValueLabel
-@onready var buttons: VBoxContainer = %Buttons
+@onready var v_box_container: VBoxContainer = %VBoxContainer
+@onready var buttons: Node
 
 signal submitted()
 
 func _ready() -> void:
+    match container_type:
+        ContainerType.VBox:
+            buttons = VBoxContainer.new()
+        ContainerType.Grid:
+            buttons = GridContainer.new()
+            buttons.columns = columns
+    buttons.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    buttons.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    v_box_container.add_child(buttons)
+
     name_label.text = display_name
     slider.min_value = min_value
     slider.max_value = max_value
