@@ -36,17 +36,26 @@ func get_linear_vel() -> Vector2:
     return Vector2(Input.get_axis("move_backward", "move_forward"), Input.get_axis("move_right", "move_left"))
 
 func _is_reverse(device: int) -> bool:
-    return Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > 0.5
+    if RobotInterface.enable_wall_tracking:
+        return false
+    else:
+        return Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > 0.5
 
 var _prev_time := Time.get_ticks_msec()
 
 func _get_velocity_multiplier(device: int) -> float:
-    var shulder := clampf((Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) - 0.5) * 2, 0, 1.0)
-    return 1.0 - shulder * 0.666
+    if RobotInterface.enable_wall_tracking:
+        return 1.0
+    else:
+        var shulder := clampf((Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) - 0.5) * 2, 0, 1.0)
+        return 1.0 - shulder * 0.666
 
 func _is_slow_mode(device: int) -> bool:
-    var a := Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT)
-    return 0.8 < a
+    if RobotInterface.enable_wall_tracking:
+        return false
+    else:
+        var a := Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT)
+        return 0.8 < a
 
 func _get_joy_stick(device: int, x_axis: int, y_axis: int) -> Vector2:
     var v := Vector2(
@@ -85,6 +94,8 @@ func _timer_callback() -> void:
     
     var linear := Vector2.ZERO
     var angular := 0.0
+    var in_course := false
+    var out_course := false
     
     var slow_mode := false
     for device in CustomInput.allowed_device:
@@ -98,6 +109,8 @@ func _timer_callback() -> void:
         linear.x += left_stick.y * mul
         linear.y += left_stick.x * mul
         angular += right_stick.x * mul
+        in_course = in_course || Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5
+        out_course = out_course || Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > 0.5
     
     if slow_mode and (not _is_prev_slow_mode):
         linear_acc_limit.buttons.get_child(1).normal_pressed.emit()
@@ -109,6 +122,8 @@ func _timer_callback() -> void:
     
     RobotInterface.target_linear_velocity = linear.limit_length(1) * max_linear_speed
     RobotInterface.target_angular_velocity = clampf(angular, -1, 1) * max_angular_speed
+    RobotInterface.in_course = in_course
+    RobotInterface.out_course = out_course
 
 func _input(event: InputEvent) -> void:
     var reverse := _is_reverse(event.device)
@@ -132,10 +147,10 @@ func _input(event: InputEvent) -> void:
                 tab_container.current_tab = tab_idx % tab_container.get_child_count()
 
             [JOY_BUTTON_LEFT_STICK, _]:
-                RobotInterface.start_unwinding()
+                RobotInterface.set_enable_wall_tracking(not RobotInterface.enable_wall_tracking)
 
             [JOY_BUTTON_A, false]:
-                RobotInterface.set_enable_wall_tracking(not RobotInterface.enable_wall_tracking)
+                RobotInterface.start_unwinding()
 
             [JOY_BUTTON_Y, false]:
                 if reverse:

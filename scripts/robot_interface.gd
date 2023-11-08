@@ -55,6 +55,9 @@ var _arm_angle_pub := rosbridge.create_publisher("std_msgs/Float64", "arm_angle"
 var _arm_length_pub := rosbridge.create_publisher("std_msgs/Float64", "arm_length")
 var _large_wheel_cmd_pub := rosbridge.create_publisher("std_msgs/Float64", "large_wheel_cmd")
 
+var in_course := false
+var out_course := false
+
 var _idle_time := 0.0
 
 func init() -> void:
@@ -96,7 +99,7 @@ func _steer_states_callback(msg: Dictionary) -> void:
     steer_state_changed.emit()
 
 func _publish_command() -> void:
-    if cmd_vel_publisher_enabled and _idle_time < 0.3:
+    if cmd_vel_publisher_enabled:
         _cmd_vel_pub.publish({
             "linear": {
                 "x": filtered_linear_velocity.x,
@@ -104,6 +107,7 @@ func _publish_command() -> void:
                 "z": 1.0 if enable_wall_tracking else 0.0,
             },
             "angular": {
+                "x": float(in_course) - float(out_course),
                 "z": filtered_angular_velocity
             }
         })
