@@ -7,7 +7,9 @@ extends Panel
 @onready var donfan_retract_button: Button = $HBoxContainer/DonfanControlButtons/DonfanRetractButton
 @onready var pre_get_over_button: Button = $HBoxContainer/GetOverControlButtons/PreGetOverButton
 @onready var post_get_over_button: Button = $HBoxContainer/GetOverControlButtons/PostGetOverButton
-
+@onready var arm_length: Button = $HBoxContainer/Calibration/ArmLength
+@onready var expander: Button = $HBoxContainer/Calibration/Expander
+@onready var arm_angle: Button = $HBoxContainer/Calibration/ArmAngle
 
 func _ready() -> void:
     arm_virtical_button.pressed.connect(
@@ -42,4 +44,16 @@ func _ready() -> void:
             RobotInterface.set_donfan_cmd(-1)
             RobotInterface.set_large_wheel_cmd(0.0)
             RobotInterface.set_arm_angle(deg_to_rad(-60))
+    )
+    arm_length.pressed.connect(
+        func() -> void:
+            RobotInterface.set_arm_length(-1)
+    )
+    expander.pressed.connect(
+        func() -> void:
+            RobotInterface.set_expander_length(-1)
+    )
+    arm_angle.pressed.connect(
+        func() -> void:
+            RobotInterface.set_arm_angle(deg_to_rad(-61))
     )

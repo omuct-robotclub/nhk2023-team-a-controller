@@ -1,10 +1,9 @@
-[gd_scene load_steps=24 format=3 uid="uid://cgn8t07t2if4f"]
+[gd_scene load_steps=23 format=3 uid="uid://cgn8t07t2if4f"]
 
 [ext_resource type="Theme" uid="uid://baqy2s2jpay2" path="res://theme.tres" id="1_vm7p2"]
 [ext_resource type="Script" path="res://scripts/avoid_notch.gd" id="2_3tkds"]
 [ext_resource type="Script" path="res://scripts/robot_controller.gd" id="3_oi048"]
 [ext_resource type="Script" path="res://scripts/reset_presets_button.gd" id="4_0p5sv"]
-[ext_resource type="Script" path="res://scripts/recalibration.gd" id="4_3eh2p"]
 [ext_resource type="Script" path="res://scripts/acc_limit_controller.gd" id="4_lqmxo"]
 [ext_resource type="Script" path="res://scripts/time_signal.gd" id="4_taf0e"]
 [ext_resource type="Script" path="res://scripts/support_controller.gd" id="4_yedj2"]
@@ -286,6 +285,32 @@ layout_mode = 2
 size_flags_vertical = 3
 text = "格納"
 
+[node name="Calibration" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/Calibration"]
+layout_mode = 2
+text = "キャリブレーション"
+
+[node name="ArmLength" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/Calibration"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "お助け長さ"
+
+[node name="Expander" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/Calibration"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "ロジャー"
+
+[node name="ArmAngle" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/Calibration"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "お助け角度"
+
 [node name="DonfanControlButtons" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -322,34 +347,6 @@ text = "段越え
 layout_mode = 2
 size_flags_vertical = 3
 text = "ロープ超え"
-
-[node name="ReCalib" type="Panel" parent="MarginContainer/MainController/TabContainer"]
-visible = false
-layout_mode = 2
-script = ExtResource("4_3eh2p")
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer/ReCalib"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ArmLength" type="Button" parent="MarginContainer/MainController/TabContainer/ReCalib/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "お助け長さ"
-
-[node name="Expander" type="Button" parent="MarginContainer/MainController/TabContainer/ReCalib/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "ロジャー"
-
-[node name="ArmAngle" type="Button" parent="MarginContainer/MainController/TabContainer/ReCalib/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "お助け角度"
 
 [node name="Offset" type="Panel" parent="MarginContainer/MainController/TabContainer"]
 visible = false
