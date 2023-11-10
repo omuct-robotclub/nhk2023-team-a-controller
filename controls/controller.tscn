@@ -524,6 +524,26 @@ text = "Start"
 visible = false
 layout_mode = 2
 
+[node name="WallTracer" type="Panel" parent="MarginContainer/MainController/TabContainer/PIDGains"]
+visible = false
+layout_mode = 2
+
+[node name="WallTracerGainController" parent="MarginContainer/MainController/TabContainer/PIDGains/WallTracer" instance=ExtResource("6_waxgt")]
+layout_mode = 1
+size_flags_vertical = 3
+display_name = "WallTracer"
+node_name = "/wall_tracer"
+parameter_base = "angular_pid_gain"
+
+[node name="Kp" parent="MarginContainer/MainController/TabContainer/PIDGains/WallTracer/WallTracerGainController" index="1"]
+max_value = 20.0
+
+[node name="Min" parent="MarginContainer/MainController/TabContainer/PIDGains/WallTracer/WallTracerGainController" index="4"]
+min_value = -10.0
+
+[node name="Max" parent="MarginContainer/MainController/TabContainer/PIDGains/WallTracer/WallTracerGainController" index="5"]
+max_value = 10.0
+
 [node name="Steer" type="Panel" parent="MarginContainer/MainController/TabContainer/PIDGains"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -683,6 +703,7 @@ horizontal_alignment = 2
 script = ExtResource("19_57jgw")
 
 [editable path="MarginContainer/MainController/TabContainer/Mech/ArmLengthControllerRunZone/Slider"]
+[editable path="MarginContainer/MainController/TabContainer/PIDGains/WallTracer/WallTracerGainController"]
 [editable path="MarginContainer/MainController/TabContainer/PIDGains/Steer/SteerGainController"]
 [editable path="MarginContainer/MainController/TabContainer/PIDGains/ArmAngle/ArmAngleGainController"]
 [editable path="MarginContainer/MainController/TabContainer/PIDGains/ArmLength/ArmLengthGainController"]
