@@ -22,7 +22,7 @@ func _ready() -> void:
     )
     arm_retract_button.pressed.connect(
         func() -> void:
-            RobotInterface.set_arm_angle(deg_to_rad(-60))
+            RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN)
     )
     
     donfan_expand_button.pressed.connect(
@@ -43,7 +43,7 @@ func _ready() -> void:
         func() -> void:
             RobotInterface.set_donfan_cmd(-1)
             RobotInterface.set_large_wheel_cmd(0.0)
-            RobotInterface.set_arm_angle(deg_to_rad(-35))
+            RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN)
     )
     arm_length.pressed.connect(
         func() -> void:
@@ -55,5 +55,5 @@ func _ready() -> void:
     )
     arm_angle.pressed.connect(
         func() -> void:
-            RobotInterface.set_arm_angle(deg_to_rad(-61))
+            RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN - deg_to_rad(1))
     )
