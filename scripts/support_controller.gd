@@ -5,6 +5,8 @@ extends Panel
 @onready var arm_retract_button: Button = $HBoxContainer/ArmControlButtons/ArmRetractButton
 @onready var donfan_expand_button: Button = $HBoxContainer/DonfanControlButtons/DonfanExpandButton
 @onready var donfan_retract_button: Button = $HBoxContainer/DonfanControlButtons/DonfanRetractButton
+@onready var block_upper_button: Button = $HBoxContainer/Blocker/BlockUpperButton
+@onready var block_hol_button: Button = $HBoxContainer/Blocker/BlockHolButton
 @onready var pre_get_over_button: Button = $HBoxContainer/GetOverControlButtons/PreGetOverButton
 @onready var post_get_over_button: Button = $HBoxContainer/GetOverControlButtons/PostGetOverButton
 @onready var arm_length: Button = $HBoxContainer/Calibration/ArmLength
@@ -24,7 +26,7 @@ func _ready() -> void:
         func() -> void:
             RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN)
     )
-    
+
     donfan_expand_button.pressed.connect(
         func() -> void:
             RobotInterface.set_donfan_cmd(1)
@@ -33,7 +35,18 @@ func _ready() -> void:
         func() -> void:
             RobotInterface.set_donfan_cmd(-1)
     )
-    
+
+    block_upper_button.pressed.connect(
+        func() -> void:
+            RobotInterface.set_arm_angle(deg_to_rad(20.0))
+            RobotInterface.set_arm_length(1.0)
+    )
+    block_hol_button.pressed.connect(
+        func() -> void:
+            RobotInterface.set_arm_angle(deg_to_rad(0.0))
+            RobotInterface.set_arm_length(1.0)
+    )
+
     pre_get_over_button.pressed.connect(
         func() -> void:
             RobotInterface.set_large_wheel_cmd(0.6)
@@ -42,6 +55,7 @@ func _ready() -> void:
     post_get_over_button.pressed.connect(
         func() -> void:
             RobotInterface.set_donfan_cmd(-1)
+            RobotInterface.set_expander_length(0.0)
             RobotInterface.set_large_wheel_cmd(0.0)
             RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN)
     )

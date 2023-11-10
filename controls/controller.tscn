@@ -451,6 +451,24 @@ layout_mode = 2
 size_flags_vertical = 3
 text = "格納"
 
+[node name="Blocker" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/Blocker"]
+layout_mode = 2
+text = "妨害"
+
+[node name="BlockUpperButton" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/Blocker"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "上妨害"
+
+[node name="BlockHolButton" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/Blocker"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "水平妨害"
+
 [node name="GetOverControlButtons" type="VBoxContainer" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -525,7 +543,6 @@ visible = false
 layout_mode = 2
 
 [node name="WallTracer" type="Panel" parent="MarginContainer/MainController/TabContainer/PIDGains"]
-visible = false
 layout_mode = 2
 
 [node name="WallTracerGainController" parent="MarginContainer/MainController/TabContainer/PIDGains/WallTracer" instance=ExtResource("6_waxgt")]
@@ -545,6 +562,7 @@ min_value = -10.0
 max_value = 10.0
 
 [node name="Steer" type="Panel" parent="MarginContainer/MainController/TabContainer/PIDGains"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 
