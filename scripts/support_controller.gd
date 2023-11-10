@@ -43,7 +43,7 @@ func _ready() -> void:
         func() -> void:
             RobotInterface.set_donfan_cmd(-1)
             RobotInterface.set_large_wheel_cmd(0.0)
-            RobotInterface.set_arm_angle(deg_to_rad(-60))
+            RobotInterface.set_arm_angle(deg_to_rad(-35))
     )
     arm_length.pressed.connect(
         func() -> void:

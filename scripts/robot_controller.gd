@@ -2,8 +2,7 @@ class_name RobotController
 extends Control
 
 @export var max_linear_speed := 2.6
-@export var max_angular_speed := 6.0
-@export var max_arm_pos_velocity := 0.3
+@export var max_angular_speed := 4.0
 
 @export var deadzone_radius := 0.2
 @export var arm_base_length := 0.775
@@ -69,10 +68,6 @@ func _get_joy_stick(device: int, x_axis: int, y_axis: int) -> Vector2:
         return Vector2.ZERO
     else:
         return v
-#    var length := maxf(v.length() - deadzone_radius, 0.0)
-#    length /= 1 - deadzone_radius
-#    var angle := v.angle()
-#    return Vector2(length, 0.0).rotated(angle)
 
 func _timer_callback() -> void:
     var now := Time.get_ticks_msec()
