@@ -56,8 +56,8 @@ func _ready() -> void:
         func() -> void:
             RobotInterface.set_donfan_cmd(-1)
             RobotInterface.set_expander_length(0.0)
-            RobotInterface.set_large_wheel_cmd(0.0)
             RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN)
+            RobotInterface.set_arm_length(0.0)
     )
     arm_length.pressed.connect(
         func() -> void:
