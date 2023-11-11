@@ -28,11 +28,25 @@ var _is_prev_slow_mode := false
 func _ready() -> void:
     cmd_vel_indicator_.max_linear_velocity = max_linear_speed
     cmd_vel_indicator_.max_angular_velocity = max_angular_speed
+    RobotInterface.cmd_vel_publisher_enabled_changed.connect(_update_bg_color)
+    RobotInterface.enable_wall_tracking_changed.connect(_update_bg_color)
+    _update_bg_color()
     add_child(tim_)
     tim_.wait_time = 1.0 / 60
     tim_.timeout.connect(_timer_callback)
     tim_.start()
     RobotInterface.init()
+
+func _update_bg_color() -> void:
+    match [RobotInterface.cmd_vel_publisher_enabled, RobotInterface.enable_wall_tracking]:
+        [false, false]:
+            RenderingServer.set_default_clear_color(Color(0.3, 0.3, 0.3, 1.0))
+        [true, false]:
+            RenderingServer.set_default_clear_color(Color.AQUAMARINE)
+        [false, true]:
+            RenderingServer.set_default_clear_color(Color(0.3, 0.3, 0.3, 1.0))
+        [true, true]:
+            RenderingServer.set_default_clear_color(Color.ORANGE)
 
 func get_linear_vel() -> Vector2:
     return Vector2(Input.get_axis("move_backward", "move_forward"), Input.get_axis("move_right", "move_left"))
