@@ -179,14 +179,14 @@ func _input(event: InputEvent) -> void:
             [JOY_BUTTON_DPAD_LEFT, true, false]: _cheat(6)
             [JOY_BUTTON_DPAD_RIGHT, true, false]: _cheat(7)
             
-            [JOY_BUTTON_LEFT_STICK, _, _]: RobotInterface.set_enable_wall_tracking(not RobotInterface.enable_wall_tracking)
+            [JOY_BUTTON_RIGHT_STICK, _, _]: RobotInterface.set_enable_wall_tracking(not RobotInterface.enable_wall_tracking)
 
             [JOY_BUTTON_Y, false, true]: arm_length_slider.buttons.get_child(0).normal_pressed.emit()
             [JOY_BUTTON_B, false, true]: arm_length_slider.buttons.get_child(1).normal_pressed.emit()
             [JOY_BUTTON_A, false, true]: arm_length_slider.buttons.get_child(2).normal_pressed.emit()
             [JOY_BUTTON_X, false, true]: RobotInterface.set_arm_length(0.0)
             
-            [JOY_BUTTON_RIGHT_STICK, _, _]: RobotInterface.set_enable_large_wheel(not RobotInterface.enable_large_wheel)
+            [JOY_BUTTON_LEFT_STICK, _, _]: RobotInterface.set_enable_large_wheel(not RobotInterface.enable_large_wheel)
             [JOY_BUTTON_MISC1, _, _]: RobotInterface.set_enable_large_wheel(not RobotInterface.enable_large_wheel)
 
 var _working := false
