@@ -115,6 +115,8 @@ func _timer_callback() -> void:
         slow_mode = slow_mode || _is_slow_mode(device)
         var left_stick := _get_joy_stick(device, JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y)
         var right_stick := _get_joy_stick(device, JOY_AXIS_RIGHT_X, JOY_AXIS_RIGHT_Y)
+        if abs(right_stick.x) > 0.2:
+            RobotInterface.set_enable_wall_tracking(false)
         var mul := _get_velocity_multiplier(device)
         linear.x += left_stick.y * mul
         linear.y += left_stick.x * mul
