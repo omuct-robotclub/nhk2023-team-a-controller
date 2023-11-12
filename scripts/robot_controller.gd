@@ -140,6 +140,7 @@ func _timer_callback() -> void:
 func _cheat(index: int) -> void:
     assert(1 <= index and index <= 8)
     cheat_arm_angle.buttons.get_child(index-1).normal_pressed.emit()
+    await get_tree().create_timer(0.5).timeout
     cheat_arm_length.buttons.get_child(index-1).normal_pressed.emit()
 
 func _input(event: InputEvent) -> void:
