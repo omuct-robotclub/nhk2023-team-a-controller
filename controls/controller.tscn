@@ -1,9 +1,10 @@
-[gd_scene load_steps=23 format=3 uid="uid://cgn8t07t2if4f"]
+[gd_scene load_steps=24 format=3 uid="uid://cgn8t07t2if4f"]
 
 [ext_resource type="Theme" uid="uid://baqy2s2jpay2" path="res://theme.tres" id="1_vm7p2"]
 [ext_resource type="Script" path="res://scripts/avoid_notch.gd" id="2_3tkds"]
 [ext_resource type="Script" path="res://scripts/robot_controller.gd" id="3_oi048"]
 [ext_resource type="Script" path="res://scripts/reset_presets_button.gd" id="4_0p5sv"]
+[ext_resource type="Script" path="res://scripts/wall_tracking_vibration_controller.gd" id="4_eca1p"]
 [ext_resource type="Script" path="res://scripts/acc_limit_controller.gd" id="4_lqmxo"]
 [ext_resource type="Script" path="res://scripts/time_signal.gd" id="4_taf0e"]
 [ext_resource type="Script" path="res://scripts/support_controller.gd" id="4_yedj2"]
@@ -45,6 +46,9 @@ script = ExtResource("2_3tkds")
 layout_mode = 2
 script = ExtResource("3_oi048")
 
+[node name="WallTrackingVibrationController" type="Node" parent="MarginContainer/MainController"]
+script = ExtResource("4_eca1p")
+
 [node name="TabContainer" type="TabContainer" parent="MarginContainer/MainController"]
 layout_mode = 1
 anchors_preset = 15
@@ -55,6 +59,7 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 62
 
 [node name="Mech" type="HBoxContainer" parent="MarginContainer/MainController/TabContainer"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -351,7 +356,6 @@ grow_horizontal = 0
 script = ExtResource("14_xppwc")
 
 [node name="Support" type="Panel" parent="MarginContainer/MainController/TabContainer"]
-visible = false
 layout_mode = 2
 script = ExtResource("4_yedj2")
 
@@ -473,7 +477,16 @@ text = "水平妨害"
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/GetOverControlButtons"]
+[node name="Label1" type="Label" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/GetOverControlButtons"]
+layout_mode = 2
+text = "ランゾーン展開"
+
+[node name="ExpandRunzoneButton" type="Button" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/GetOverControlButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "展開"
+
+[node name="Label2" type="Label" parent="MarginContainer/MainController/TabContainer/Support/HBoxContainer/GetOverControlButtons"]
 layout_mode = 2
 text = "段越え"
 

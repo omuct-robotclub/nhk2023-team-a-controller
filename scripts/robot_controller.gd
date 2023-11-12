@@ -9,11 +9,14 @@ extends Control
 
 @export var arm_angle_vel := deg_to_rad(60.0)
 
+@export var wall_tracing_auto_diable_timeout := 1.0
+
 var tim_ := Timer.new()
 
 var collecting_ := false
 var all_expanding_ := false
 var _is_prev_slow_mode := false
+var _wall_tracing_enabled_time := NAN
 
 @onready var tab_container: TabContainer = $TabContainer
 @onready var cmd_vel_indicator_ = %CmdVelIndicator
@@ -30,6 +33,11 @@ func _ready() -> void:
     cmd_vel_indicator_.max_angular_velocity = max_angular_speed
     RobotInterface.cmd_vel_publisher_enabled_changed.connect(_update_bg_color)
     RobotInterface.enable_wall_tracking_changed.connect(_update_bg_color)
+    RobotInterface.enable_wall_tracking_changed.connect(
+        func() -> void:
+            if RobotInterface.enable_wall_tracking:
+                _wall_tracing_enabled_time = Time.get_ticks_msec() * 1e-3
+    )
     _update_bg_color()
     add_child(tim_)
     tim_.wait_time = 1.0 / 60
@@ -115,7 +123,7 @@ func _timer_callback() -> void:
         slow_mode = slow_mode || _is_slow_mode(device)
         var left_stick := _get_joy_stick(device, JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y)
         var right_stick := _get_joy_stick(device, JOY_AXIS_RIGHT_X, JOY_AXIS_RIGHT_Y)
-        if abs(right_stick.x) > 0.2:
+        if abs(right_stick.x) > 0.2 and (now * 1e-3) - _wall_tracing_enabled_time > wall_tracing_auto_diable_timeout:
             RobotInterface.set_enable_wall_tracking(false)
         var mul := _get_velocity_multiplier(device)
         linear.x += left_stick.y * mul
@@ -164,15 +172,15 @@ func _input(event: InputEvent) -> void:
             [JOY_BUTTON_DPAD_DOWN, false, false]: RobotInterface.set_collector_cmd(not RobotInterface.collector_cmd)
             [JOY_BUTTON_DPAD_LEFT, false, false]: _cheat(2)
             [JOY_BUTTON_DPAD_RIGHT, false, false]: _cheat(3)
-            
+
             [JOY_BUTTON_Y, false, false]:
-                if reverse: _retract_all()
-                else: _expand_all()
+                if reverse: RobotInterface.retract_all()
+                else: RobotInterface.expand_all()
             [JOY_BUTTON_A, false, false]: RobotInterface.start_unwinding()
 
             [JOY_BUTTON_Y, true, false]:
-                if reverse: _retract_all()
-                else: _expand_runzone()
+                if reverse: RobotInterface.retract_all()
+                else: RobotInterface.expand_runzone()
             [JOY_BUTTON_B, true, false]: arm_length_slider_runzone.buttons.get_child(0).normal_pressed.emit()
             [JOY_BUTTON_A, true, false]: arm_length_slider_runzone.buttons.get_child(1).normal_pressed.emit()
             [JOY_BUTTON_X, true, false]: arm_length_slider_runzone.buttons.get_child(2).normal_pressed.emit()
@@ -191,35 +199,3 @@ func _input(event: InputEvent) -> void:
 
             [JOY_BUTTON_RIGHT_STICK, _, _]: RobotInterface.set_enable_wall_tracking(not RobotInterface.enable_wall_tracking)
             [JOY_BUTTON_MISC1, _, _]: RobotInterface.set_enable_wall_tracking(not RobotInterface.enable_wall_tracking)
-
-var _working := false
-
-func _expand_all() -> void:
-    if _working: return
-    _working = true
-    RobotInterface.set_donfan_cmd(1)
-    await get_tree().create_timer(1.0).timeout
-    RobotInterface.set_expander_length(0.9)
-    RobotInterface.set_arm_angle(deg_to_rad(90))
-    await get_tree().create_timer(1.0).timeout
-    _working = false
-
-func _expand_runzone() -> void:
-    if _working: return
-    _working = true
-    RobotInterface.set_donfan_cmd(1)
-    await get_tree().create_timer(1.0).timeout
-    RobotInterface.set_expander_length(0.3)
-    RobotInterface.set_arm_angle(deg_to_rad(90))
-    await get_tree().create_timer(1.0).timeout
-    _working = false
-
-func _retract_all() -> void:
-    if _working: return
-    _working = true
-    RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN)
-    RobotInterface.set_arm_length(0.0)
-    RobotInterface.set_expander_length(0.0)
-    await get_tree().create_timer(1.5).timeout
-    RobotInterface.set_donfan_cmd(-1)
-    _working = false

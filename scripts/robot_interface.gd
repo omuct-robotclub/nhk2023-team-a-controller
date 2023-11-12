@@ -177,3 +177,35 @@ func set_enable_wall_tracking(enable: bool) -> void:
         in_course = true
         out_course = false
     enable_wall_tracking_changed.emit()
+
+var _working := false
+
+func expand_all() -> void:
+    if _working: return
+    _working = true
+    RobotInterface.set_donfan_cmd(1)
+    await get_tree().create_timer(1.0).timeout
+    RobotInterface.set_expander_length(0.9)
+    RobotInterface.set_arm_angle(deg_to_rad(90))
+    await get_tree().create_timer(1.0).timeout
+    _working = false
+
+func expand_runzone() -> void:
+    if _working: return
+    _working = true
+    RobotInterface.set_donfan_cmd(1)
+    await get_tree().create_timer(1.0).timeout
+    RobotInterface.set_expander_length(0.3)
+    RobotInterface.set_arm_angle(deg_to_rad(90))
+    await get_tree().create_timer(1.0).timeout
+    _working = false
+
+func retract_all() -> void:
+    if _working: return
+    _working = true
+    RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN)
+    RobotInterface.set_arm_length(0.0)
+    RobotInterface.set_expander_length(0.0)
+    await get_tree().create_timer(1.5).timeout
+    RobotInterface.set_donfan_cmd(-1)
+    _working = false

@@ -9,6 +9,7 @@ extends Panel
 @onready var block_hol_button: Button = $HBoxContainer/Blocker/BlockHolButton
 @onready var pre_get_over_button: Button = $HBoxContainer/GetOverControlButtons/PreGetOverButton
 @onready var post_get_over_button: Button = $HBoxContainer/GetOverControlButtons/PostGetOverButton
+@onready var expand_runzone_button: Button = $HBoxContainer/GetOverControlButtons/ExpandRunzoneButton
 @onready var arm_length: Button = $HBoxContainer/Calibration/ArmLength
 @onready var expander: Button = $HBoxContainer/Calibration/Expander
 @onready var arm_angle: Button = $HBoxContainer/Calibration/ArmAngle
@@ -47,10 +48,17 @@ func _ready() -> void:
             RobotInterface.set_arm_length(1.0)
     )
 
+    expand_runzone_button.pressed.connect(
+        func() -> void:
+            RobotInterface.expand_runzone()
+    )
     pre_get_over_button.pressed.connect(
         func() -> void:
-            RobotInterface.set_large_wheel_cmd(0.6)
-            RobotInterface.set_arm_angle(deg_to_rad(0))
+            RobotInterface.set_expander_length(0.0)
+            RobotInterface.set_arm_angle(0.0)
+            RobotInterface.set_arm_length(0.0)
+            await get_tree().create_timer(1.5).timeout
+            RobotInterface.set_donfan_cmd(-1)
     )
     post_get_over_button.pressed.connect(
         func() -> void:
