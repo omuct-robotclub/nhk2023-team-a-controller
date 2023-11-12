@@ -173,4 +173,7 @@ func set_enable_large_wheel(enable: bool) -> void:
 
 func set_enable_wall_tracking(enable: bool) -> void:
     enable_wall_tracking = enable
+    if enable:
+        in_course = true
+        out_course = false
     enable_wall_tracking_changed.emit()
