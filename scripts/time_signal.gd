@@ -54,5 +54,4 @@ func _process(delta: float) -> void:
     if started:
         elapsed += delta
         _update_label()
-        _vibrate()
-    
+#        _vibrate()
