@@ -112,12 +112,11 @@ func _timer_callback() -> void:
                 else:
                     RobotInterface.arm_angle += arm_angle_vel * dt
                 RobotInterface.set_arm_angle(clampf(RobotInterface.arm_angle, RobotInterface.ARM_ANGLE_MIN, RobotInterface.ARM_ANGLE_MAX))
-    
+
     var linear := Vector2.ZERO
     var angular := 0.0
-    var in_course := false
-    var out_course := false
-    
+    var target_course := RobotInterface.Course.NO_COURSE
+
     var slow_mode := false
     for device in CustomInput.allowed_device:
         slow_mode = slow_mode || _is_slow_mode(device)
@@ -129,9 +128,14 @@ func _timer_callback() -> void:
         linear.x += left_stick.y * mul
         linear.y += left_stick.x * mul
         angular += right_stick.x * mul
-        in_course = in_course || Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5
-        out_course = out_course || Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > 0.5
-    
+
+        if Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5:
+            target_course = RobotInterface.Course.IN_COURSE
+        elif Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > 0.5:
+            target_course = RobotInterface.Course.OUT_COURSE
+        elif Input.is_joy_button_pressed(device, JOY_BUTTON_RIGHT_SHOULDER):
+            target_course = RobotInterface.Course.PARKING_COURSE
+
     if slow_mode and (not _is_prev_slow_mode):
         linear_acc_limit.buttons.get_child(1).normal_pressed.emit()
         angular_acc_limit.buttons.get_child(1).normal_pressed.emit()
@@ -139,11 +143,10 @@ func _timer_callback() -> void:
         linear_acc_limit.buttons.get_child(0).normal_pressed.emit()
         angular_acc_limit.buttons.get_child(0).normal_pressed.emit()
     _is_prev_slow_mode = slow_mode
-    
+
     RobotInterface.target_linear_velocity = linear.limit_length(1) * max_linear_speed
     RobotInterface.target_angular_velocity = clampf(angular, -1, 1) * max_angular_speed
-    RobotInterface.in_course = in_course
-    RobotInterface.out_course = out_course
+    RobotInterface.target_course = target_course
 
 func _cheat(index: int) -> void:
     assert(1 <= index and index <= 8)

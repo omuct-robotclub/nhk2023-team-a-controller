@@ -55,8 +55,14 @@ var _arm_angle_pub := rosbridge.create_publisher("std_msgs/Float64", "arm_angle"
 var _arm_length_pub := rosbridge.create_publisher("std_msgs/Float64", "arm_length")
 var _large_wheel_cmd_pub := rosbridge.create_publisher("std_msgs/Float64", "large_wheel_cmd")
 
-var in_course := false
-var out_course := false
+enum Course {
+    NO_COURSE,
+    IN_COURSE,
+    OUT_COURSE,
+    PARKING_COURSE,
+}
+
+var target_course := Course.NO_COURSE
 
 var _idle_time := 0.0
 
@@ -107,7 +113,10 @@ func _publish_command() -> void:
                 "z": 1.0 if enable_wall_tracking else 0.0,
             },
             "angular": {
-                "x": float(in_course) - float(out_course),
+                "x": 0.0 if target_course == Course.NO_COURSE \
+                    else 0.3 if target_course == Course.IN_COURSE \
+                    else -0.3 if target_course == Course.OUT_COURSE \
+                    else -0.75,
                 "z": filtered_angular_velocity
             }
         })
@@ -174,8 +183,7 @@ func set_enable_large_wheel(enable: bool) -> void:
 func set_enable_wall_tracking(enable: bool) -> void:
     enable_wall_tracking = enable
     if enable:
-        in_course = true
-        out_course = false
+        target_course = Course.IN_COURSE
     enable_wall_tracking_changed.emit()
 
 var _working := false
