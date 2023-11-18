@@ -39,7 +39,7 @@ func _ready() -> void:
 
     block_upper_button.pressed.connect(
         func() -> void:
-            RobotInterface.set_arm_angle(deg_to_rad(20.0))
+            RobotInterface.set_arm_angle(deg_to_rad(45.0))
             RobotInterface.set_arm_length(1.0)
     )
     block_hol_button.pressed.connect(
