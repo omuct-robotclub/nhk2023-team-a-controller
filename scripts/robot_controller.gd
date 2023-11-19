@@ -181,9 +181,6 @@ func _input(event: InputEvent) -> void:
                 else: RobotInterface.expand_all()
             [JOY_BUTTON_A, false, false]: RobotInterface.start_unwinding()
 
-            [JOY_BUTTON_Y, true, false]:
-                if reverse: RobotInterface.retract_all()
-                else: RobotInterface.expand_runzone()
             [JOY_BUTTON_B, true, false]: arm_length_slider_runzone.buttons.get_child(0).normal_pressed.emit()
             [JOY_BUTTON_A, true, false]: arm_length_slider_runzone.buttons.get_child(1).normal_pressed.emit()
             [JOY_BUTTON_X, true, false]: arm_length_slider_runzone.buttons.get_child(2).normal_pressed.emit()
