@@ -59,7 +59,6 @@ func _ready() -> void:
     pre_get_over_button.pressed.connect(
         func() -> void:
             RobotInterface.set_expander_length(0.0)
-            await get_tree().create_timer(1.0).timeout
             RobotInterface.set_arm_angle(0.0)
             RobotInterface.set_arm_length(0.0)
     )
