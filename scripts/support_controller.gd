@@ -62,8 +62,6 @@ func _ready() -> void:
             await get_tree().create_timer(1.0).timeout
             RobotInterface.set_arm_angle(0.0)
             RobotInterface.set_arm_length(0.0)
-            await get_tree().create_timer(2.0).timeout
-            RobotInterface.set_donfan_cmd(-1)
     )
     post_get_over_button.pressed.connect(
         func() -> void:
