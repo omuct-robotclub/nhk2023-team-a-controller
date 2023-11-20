@@ -17,6 +17,7 @@ var collecting_ := false
 var all_expanding_ := false
 var _is_prev_slow_mode := false
 var _wall_tracing_enabled_time := NAN
+var _run_mode := false
 
 @onready var tab_container: TabContainer = $TabContainer
 @onready var cmd_vel_indicator_ = %CmdVelIndicator
@@ -32,7 +33,6 @@ func _ready() -> void:
     cmd_vel_indicator_.max_linear_velocity = max_linear_speed
     cmd_vel_indicator_.max_angular_velocity = max_angular_speed
     RobotInterface.cmd_vel_publisher_enabled_changed.connect(_update_bg_color)
-    RobotInterface.enable_wall_tracking_changed.connect(_update_bg_color)
     RobotInterface.enable_wall_tracking_changed.connect(
         func() -> void:
             if RobotInterface.enable_wall_tracking:
@@ -46,7 +46,7 @@ func _ready() -> void:
     RobotInterface.init()
 
 func _update_bg_color() -> void:
-    match [RobotInterface.cmd_vel_publisher_enabled, RobotInterface.enable_wall_tracking]:
+    match [RobotInterface.cmd_vel_publisher_enabled, _run_mode]:
         [false, false]:
             RenderingServer.set_default_clear_color(Color(0.3, 0.3, 0.3, 1.0))
         [true, false]:
@@ -60,7 +60,7 @@ func get_linear_vel() -> Vector2:
     return Vector2(Input.get_axis("move_backward", "move_forward"), Input.get_axis("move_right", "move_left"))
 
 func _is_reverse(device: int) -> bool:
-    if RobotInterface.enable_wall_tracking:
+    if _run_mode:
         return false
     else:
         return Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > 0.5
@@ -68,14 +68,14 @@ func _is_reverse(device: int) -> bool:
 var _prev_time := Time.get_ticks_msec()
 
 func _get_velocity_multiplier(device: int) -> float:
-    if RobotInterface.enable_wall_tracking:
+    if _run_mode:
         return 1.0
     else:
         var shulder := clampf((Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) - 0.5) * 2, 0, 1.0)
         return 1.0 - shulder * 0.666
 
 func _is_slow_mode(device: int) -> bool:
-    if RobotInterface.enable_wall_tracking:
+    if _run_mode:
         return false
     else:
         var a := Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT)
@@ -122,19 +122,25 @@ func _timer_callback() -> void:
         slow_mode = slow_mode || _is_slow_mode(device)
         var left_stick := _get_joy_stick(device, JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y)
         var right_stick := _get_joy_stick(device, JOY_AXIS_RIGHT_X, JOY_AXIS_RIGHT_Y)
-        if abs(right_stick.x) > 0.2 and (now * 1e-3) - _wall_tracing_enabled_time > wall_tracing_auto_diable_timeout:
-            RobotInterface.set_enable_wall_tracking(false)
         var mul := _get_velocity_multiplier(device)
         linear.x += left_stick.y * mul
         linear.y += left_stick.x * mul
         angular += right_stick.x * mul
 
-        if Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5:
-            target_course = RobotInterface.Course.IN_COURSE
-        elif Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > 0.5:
-            target_course = RobotInterface.Course.OUT_COURSE
-        elif Input.is_joy_button_pressed(device, JOY_BUTTON_RIGHT_SHOULDER):
-            target_course = RobotInterface.Course.PARKING_COURSE
+        if _run_mode:
+            var use_wall_tracking := true
+            if Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5:
+                target_course = RobotInterface.Course.IN_COURSE
+            elif Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > 0.5:
+                target_course = RobotInterface.Course.OUT_COURSE
+            elif Input.is_joy_button_pressed(device, JOY_BUTTON_RIGHT_SHOULDER):
+                target_course = RobotInterface.Course.PARKING_COURSE
+            else:
+                use_wall_tracking = false
+            if use_wall_tracking and not RobotInterface.enable_wall_tracking:
+                RobotInterface.set_enable_wall_tracking(true)
+            if (not use_wall_tracking) and RobotInterface.enable_wall_tracking:
+                RobotInterface.set_enable_wall_tracking(false)
 
     if slow_mode and (not _is_prev_slow_mode):
         linear_acc_limit.buttons.get_child(1).normal_pressed.emit()
@@ -200,5 +206,10 @@ func _input(event: InputEvent) -> void:
             [JOY_BUTTON_A, false, true]: arm_length_slider.buttons.get_child(2).normal_pressed.emit()
             [JOY_BUTTON_X, false, true]: RobotInterface.set_arm_length(0.0)
 
-            [JOY_BUTTON_RIGHT_STICK, _, _]: RobotInterface.set_enable_wall_tracking(not RobotInterface.enable_wall_tracking)
+            [JOY_BUTTON_RIGHT_STICK, _, _]:
+                _run_mode = not _run_mode
+                _update_bg_color()
+                if not _run_mode:
+                    RobotInterface.set_enable_wall_tracking(false)
+#                RobotInterface.set_enable_wall_tracking(not RobotInterface.enable_wall_tracking)
             [JOY_BUTTON_MISC1, _, _]: RobotInterface.set_enable_wall_tracking(not RobotInterface.enable_wall_tracking)
