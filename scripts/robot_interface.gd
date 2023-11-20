@@ -198,6 +198,16 @@ func expand_all() -> void:
     await get_tree().create_timer(1.0).timeout
     _working = false
 
+func expand_chiku() -> void:
+    if _working: return
+    _working = true
+    RobotInterface.set_donfan_cmd(1)
+    await get_tree().create_timer(1.0).timeout
+    RobotInterface.set_expander_length(0.9)
+    RobotInterface.set_arm_angle(deg_to_rad(107))
+    await get_tree().create_timer(1.0).timeout
+    _working = false
+
 func expand_runzone() -> void:
     if _working: return
     _working = true

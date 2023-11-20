@@ -53,15 +53,16 @@ func _ready() -> void:
             RobotInterface.set_donfan_cmd(1)
             await get_tree().create_timer(1.0).timeout
             RobotInterface.set_expander_length(0.9)
-            RobotInterface.set_arm_angle(deg_to_rad(90))
+            RobotInterface.set_arm_angle(deg_to_rad(107))
             RobotInterface.set_arm_length(0.0)
     )
     pre_get_over_button.pressed.connect(
         func() -> void:
             RobotInterface.set_expander_length(0.0)
+            await get_tree().create_timer(1.0).timeout
             RobotInterface.set_arm_angle(0.0)
             RobotInterface.set_arm_length(0.0)
-            await get_tree().create_timer(1.5).timeout
+            await get_tree().create_timer(2.0).timeout
             RobotInterface.set_donfan_cmd(-1)
     )
     post_get_over_button.pressed.connect(
