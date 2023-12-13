@@ -183,7 +183,7 @@ func set_enable_large_wheel(enable: bool) -> void:
 func set_enable_wall_tracking(enable: bool) -> void:
     enable_wall_tracking = enable
     if enable:
-        target_course = Course.IN_COURSE
+        target_course = Course.OUT_COURSE
     enable_wall_tracking_changed.emit()
 
 var _working := false
