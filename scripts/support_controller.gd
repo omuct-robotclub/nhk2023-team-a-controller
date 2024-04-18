@@ -15,69 +15,69 @@ extends Panel
 @onready var arm_angle: Button = $HBoxContainer/Calibration/ArmAngle
 
 func _ready() -> void:
-    arm_virtical_button.pressed.connect(
-        func() -> void:
-            RobotInterface.set_arm_angle(deg_to_rad(90))
-    )
-    arm_holizontal_button.pressed.connect(
-        func() -> void:
-            RobotInterface.set_arm_angle(deg_to_rad(0))
-    )
-    arm_retract_button.pressed.connect(
-        func() -> void:
-            RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN)
-    )
+	arm_virtical_button.pressed.connect(
+		func() -> void:
+			RobotInterface.set_arm_angle(deg_to_rad(90))
+	)
+	arm_holizontal_button.pressed.connect(
+		func() -> void:
+			RobotInterface.set_arm_angle(deg_to_rad(0))
+	)
+	arm_retract_button.pressed.connect(
+		func() -> void:
+			RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN)
+	)
 
-    donfan_expand_button.pressed.connect(
-        func() -> void:
-            RobotInterface.set_donfan_cmd(1)
-    )
-    donfan_retract_button.pressed.connect(
-        func() -> void:
-            RobotInterface.set_donfan_cmd(-1)
-    )
+	donfan_expand_button.pressed.connect(
+		func() -> void:
+			RobotInterface.set_donfan_cmd(1)
+	)
+	donfan_retract_button.pressed.connect(
+		func() -> void:
+			RobotInterface.set_donfan_cmd(-1)
+	)
 
-    block_upper_button.pressed.connect(
-        func() -> void:
-            RobotInterface.set_arm_angle(deg_to_rad(45.0))
-            RobotInterface.set_arm_length(1.0)
-    )
-    block_hol_button.pressed.connect(
-        func() -> void:
-            RobotInterface.set_arm_angle(deg_to_rad(0.0))
-            RobotInterface.set_arm_length(1.0)
-    )
+	block_upper_button.pressed.connect(
+		func() -> void:
+			RobotInterface.set_arm_angle(deg_to_rad(45.0))
+			RobotInterface.set_arm_length(1.0)
+	)
+	block_hol_button.pressed.connect(
+		func() -> void:
+			RobotInterface.set_arm_angle(deg_to_rad(0.0))
+			RobotInterface.set_arm_length(1.0)
+	)
 
-    expand_runzone_button.pressed.connect(
-        func() -> void:
-            RobotInterface.set_donfan_cmd(1)
-            await get_tree().create_timer(1.0).timeout
-            RobotInterface.set_expander_length(0.9)
-            RobotInterface.set_arm_angle(deg_to_rad(107))
-            RobotInterface.set_arm_length(0.0)
-    )
-    pre_get_over_button.pressed.connect(
-        func() -> void:
-            RobotInterface.set_expander_length(0.0)
-            RobotInterface.set_arm_angle(0.0)
-            RobotInterface.set_arm_length(0.0)
-    )
-    post_get_over_button.pressed.connect(
-        func() -> void:
-            RobotInterface.set_donfan_cmd(-1)
-            RobotInterface.set_expander_length(0.0)
-            RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN)
-            RobotInterface.set_arm_length(0.0)
-    )
-    arm_length.pressed.connect(
-        func() -> void:
-            RobotInterface.set_arm_length(-1)
-    )
-    expander.pressed.connect(
-        func() -> void:
-            RobotInterface.set_expander_length(-1)
-    )
-    arm_angle.pressed.connect(
-        func() -> void:
-            RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN - deg_to_rad(1))
-    )
+	expand_runzone_button.pressed.connect(
+		func() -> void:
+			RobotInterface.set_donfan_cmd(1)
+			await get_tree().create_timer(1.0).timeout
+			RobotInterface.set_expander_length(0.9)
+			RobotInterface.set_arm_angle(deg_to_rad(107))
+			RobotInterface.set_arm_length(0.0)
+	)
+	pre_get_over_button.pressed.connect(
+		func() -> void:
+			RobotInterface.set_expander_length(0.0)
+			RobotInterface.set_arm_angle(0.0)
+			RobotInterface.set_arm_length(0.0)
+	)
+	post_get_over_button.pressed.connect(
+		func() -> void:
+			RobotInterface.set_donfan_cmd(-1)
+			RobotInterface.set_expander_length(0.0)
+			RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN)
+			RobotInterface.set_arm_length(0.0)
+	)
+	arm_length.pressed.connect(
+		func() -> void:
+			RobotInterface.set_arm_length(-1)
+	)
+	expander.pressed.connect(
+		func() -> void:
+			RobotInterface.set_expander_length(-1)
+	)
+	arm_angle.pressed.connect(
+		func() -> void:
+			RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN - deg_to_rad(1))
+	)
