@@ -15,6 +15,10 @@ signal enable_wall_tracking_changed()
 
 const ARM_ANGLE_MIN := deg_to_rad(-35.0)
 const ARM_ANGLE_MAX := deg_to_rad(125.0)
+const ARM_LENGTH_MIN := 0
+const ARM_LENGTH_MAX := 0.7
+const EXPANDER_LENGTH_MIN := 0
+const EXPANDER_LENGTH_MAX := 0.65
 
 var cmd_vel_publisher_enabled := true
 var cmd_vel_frame := "base_footprint"
@@ -191,39 +195,39 @@ var _working := false
 func expand_all() -> void:
 	if _working: return
 	_working = true
-	RobotInterface.set_donfan_cmd(1)
+	set_donfan_cmd(1)
 	await get_tree().create_timer(1.0).timeout
-	RobotInterface.set_expander_length(0.9)
-	RobotInterface.set_arm_angle(deg_to_rad(34))
+	set_expander_length(EXPANDER_LENGTH_MAX)
+	set_arm_angle(deg_to_rad(34))
 	await get_tree().create_timer(1.0).timeout
 	_working = false
 
 func expand_chiku() -> void:
 	if _working: return
 	_working = true
-	RobotInterface.set_donfan_cmd(1)
+	set_donfan_cmd(1)
 	await get_tree().create_timer(1.0).timeout
-	RobotInterface.set_expander_length(0.9)
-	RobotInterface.set_arm_angle(deg_to_rad(90))
+	set_expander_length(EXPANDER_LENGTH_MAX)
+	set_arm_angle(deg_to_rad(90))
 	await get_tree().create_timer(1.0).timeout
 	_working = false
 
 func expand_runzone() -> void:
 	if _working: return
 	_working = true
-	RobotInterface.set_donfan_cmd(1)
+	set_donfan_cmd(1)
 	await get_tree().create_timer(1.0).timeout
-	RobotInterface.set_expander_length(0.3)
-	RobotInterface.set_arm_angle(deg_to_rad(90))
+	set_expander_length(0.3)
+	set_arm_angle(deg_to_rad(90))
 	await get_tree().create_timer(1.0).timeout
 	_working = false
 
 func retract_all() -> void:
 	if _working: return
 	_working = true
-	RobotInterface.set_arm_angle(RobotInterface.ARM_ANGLE_MIN)
-	RobotInterface.set_arm_length(0.0)
-	RobotInterface.set_expander_length(0.0)
+	set_arm_angle(ARM_ANGLE_MIN)
+	set_arm_length(ARM_LENGTH_MIN)
+	set_expander_length(EXPANDER_LENGTH_MIN)
 	await get_tree().create_timer(3.5).timeout
-	RobotInterface.set_donfan_cmd(-1)
+	set_donfan_cmd(-1)
 	_working = false

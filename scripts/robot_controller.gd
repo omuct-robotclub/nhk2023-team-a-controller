@@ -104,7 +104,7 @@ func _timer_callback() -> void:
 					RobotInterface.arm_length -= 0.25 * dt
 				else:
 					RobotInterface.arm_length += 0.25 * dt
-				RobotInterface.set_arm_length(clampf(RobotInterface.arm_length, 0.0, 1.0))
+				RobotInterface.set_arm_length(clampf(RobotInterface.arm_length, RobotInterface.ARM_LENGTH_MIN, RobotInterface.ARM_LENGTH_MAX))
 
 			if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
 				if reverse:
@@ -199,7 +199,7 @@ func _input(event: InputEvent) -> void:
 			[JOY_BUTTON_Y, false, true]: arm_length_slider.buttons.get_child(0).normal_pressed.emit()
 			[JOY_BUTTON_B, false, true]: arm_length_slider.buttons.get_child(1).normal_pressed.emit()
 			[JOY_BUTTON_A, false, true]: arm_length_slider.buttons.get_child(2).normal_pressed.emit()
-			[JOY_BUTTON_X, false, true]: RobotInterface.set_arm_length(0.0)
+			[JOY_BUTTON_X, false, true]: RobotInterface.set_arm_length(RobotInterface.ARM_LENGTH_MIN)
 
 			[JOY_BUTTON_RIGHT_STICK, _, _]: RobotInterface.set_enable_wall_tracking(not RobotInterface.enable_wall_tracking)
 			[JOY_BUTTON_MISC1, _, _]: RobotInterface.set_enable_wall_tracking(not RobotInterface.enable_wall_tracking)
